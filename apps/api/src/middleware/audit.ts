@@ -45,7 +45,7 @@ export function auditLog(resourceType: string, action: AuditAction) {
           actorId: req.user.userId,
           action,
           resourceType,
-          resourceId: (req.params.id as string) || ((body as Record<string, unknown>)?.id as string) || undefined,
+          resourceId: (req.params.id as string) || undefined,
           metadata: {
             method: req.method,
             path: req.originalUrl,

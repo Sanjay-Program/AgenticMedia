@@ -76,8 +76,18 @@ export async function createLedgerTransaction(
         [entryId, txId, entry.accountId, entry.entryType, entry.amount, currency]
       );
 
-      // Update account balance: debits increase assets/expenses, credits increase liabilities/equity/revenue
-      const balanceChange = entry.entryType === 'debit' ? entry.amount : -entry.amount;
+      // Update account balance based on account type:
+      // Asset/Expense accounts: debits increase, credits decrease
+      // Liability/Equity/Revenue accounts: credits increase, debits decrease
+      const acctResult = await client.query(
+        'SELECT account_type FROM ledger_accounts WHERE id = $1',
+        [entry.accountId]
+      );
+      const acctType = acctResult.rows[0]?.account_type;
+      const isNormalDebit = acctType === 'asset' || acctType === 'expense';
+      const balanceChange = entry.entryType === 'debit'
+        ? (isNormalDebit ? entry.amount : -entry.amount)
+        : (isNormalDebit ? -entry.amount : entry.amount);
       await client.query(
         `UPDATE ledger_accounts SET balance = balance + $1 WHERE id = $2`,
         [balanceChange, entry.accountId]
