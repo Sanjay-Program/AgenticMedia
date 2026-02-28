@@ -376,3 +376,209 @@ CREATE INDEX idx_job_logs_organization_id ON job_logs(organization_id);
 CREATE INDEX idx_job_logs_job_type ON job_logs(job_type);
 CREATE INDEX idx_job_logs_status ON job_logs(status);
 CREATE INDEX idx_job_logs_job_id ON job_logs(job_id);
+
+-- ============================================================
+-- Phase 1: IAM & Zero-Trust Security (Audit Events & ABAC)
+-- ============================================================
+
+CREATE TYPE audit_action AS ENUM (
+    'create', 'read', 'update', 'delete',
+    'login', 'logout', 'token_refresh',
+    'export', 'import', 'approve', 'reject',
+    'agent_action'
+);
+
+CREATE TYPE audit_actor_type AS ENUM ('user', 'ai_agent', 'system', 'api_key');
+
+-- Immutable append-only audit log for SOC-2 Type II compliance
+CREATE TABLE audit_events (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    actor_type      audit_actor_type NOT NULL,
+    actor_id        VARCHAR(255) NOT NULL,
+    action          audit_action NOT NULL,
+    resource_type   VARCHAR(255) NOT NULL,
+    resource_id     VARCHAR(255),
+    metadata        JSONB DEFAULT '{}',
+    ip_address      INET,
+    user_agent      TEXT,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Prevent UPDATE and DELETE on audit_events (append-only)
+CREATE RULE audit_events_no_update AS ON UPDATE TO audit_events DO INSTEAD NOTHING;
+CREATE RULE audit_events_no_delete AS ON DELETE TO audit_events DO INSTEAD NOTHING;
+
+CREATE INDEX idx_audit_events_organization_id ON audit_events(organization_id);
+CREATE INDEX idx_audit_events_actor_id ON audit_events(actor_id);
+CREATE INDEX idx_audit_events_action ON audit_events(action);
+CREATE INDEX idx_audit_events_resource_type ON audit_events(resource_type);
+CREATE INDEX idx_audit_events_created_at ON audit_events(created_at);
+
+-- ABAC (Attribute-Based Access Control) permissions
+CREATE TABLE abac_policies (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    name            VARCHAR(255) NOT NULL,
+    description     TEXT,
+    effect          VARCHAR(10) NOT NULL DEFAULT 'allow' CHECK (effect IN ('allow', 'deny')),
+    conditions      JSONB NOT NULL DEFAULT '{}',
+    resource_type   VARCHAR(255) NOT NULL,
+    actions         TEXT[] NOT NULL,
+    priority        INTEGER NOT NULL DEFAULT 0,
+    is_active       BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_abac_policies_organization_id ON abac_policies(organization_id);
+CREATE INDEX idx_abac_policies_resource_type ON abac_policies(resource_type);
+
+CREATE TRIGGER trg_abac_policies_updated_at
+    BEFORE UPDATE ON abac_policies
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- SSO/SAML configuration per organization
+CREATE TABLE sso_configurations (
+    id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id   UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE UNIQUE,
+    provider          VARCHAR(50) NOT NULL CHECK (provider IN ('okta', 'google_workspace', 'azure_ad', 'custom_saml')),
+    entity_id         VARCHAR(500) NOT NULL,
+    sso_url           VARCHAR(500) NOT NULL,
+    certificate       TEXT NOT NULL,
+    metadata_url      VARCHAR(500),
+    is_active         BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TRIGGER trg_sso_configurations_updated_at
+    BEFORE UPDATE ON sso_configurations
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================================
+-- Phase 2: Event Broker (Event Routing)
+-- ============================================================
+
+CREATE TYPE event_status AS ENUM ('pending', 'processing', 'delivered', 'failed', 'dead_letter');
+
+CREATE TABLE event_log (
+    id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id   UUID REFERENCES organizations(id) ON DELETE SET NULL,
+    event_type        VARCHAR(255) NOT NULL,
+    source            VARCHAR(255) NOT NULL,
+    payload           JSONB NOT NULL DEFAULT '{}',
+    status            event_status NOT NULL DEFAULT 'pending',
+    idempotency_key   VARCHAR(255) NOT NULL UNIQUE,
+    retry_count       INTEGER NOT NULL DEFAULT 0,
+    max_retries       INTEGER NOT NULL DEFAULT 3,
+    error_message     TEXT,
+    processed_at      TIMESTAMPTZ,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_event_log_event_type ON event_log(event_type);
+CREATE INDEX idx_event_log_status ON event_log(status);
+CREATE INDEX idx_event_log_idempotency_key ON event_log(idempotency_key);
+CREATE INDEX idx_event_log_created_at ON event_log(created_at);
+
+-- ============================================================
+-- Phase 3: AI Agent Swarm
+-- ============================================================
+
+CREATE TYPE agent_type AS ENUM ('scout', 'negotiator', 'legal', 'orchestrator');
+CREATE TYPE agent_run_status AS ENUM ('pending', 'running', 'completed', 'failed', 'cancelled');
+
+CREATE TABLE agent_runs (
+    id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id   UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    agent_type        agent_type NOT NULL,
+    parent_run_id     UUID REFERENCES agent_runs(id) ON DELETE SET NULL,
+    status            agent_run_status NOT NULL DEFAULT 'pending',
+    input_data        JSONB NOT NULL DEFAULT '{}',
+    output_data       JSONB,
+    error_message     TEXT,
+    llm_model         VARCHAR(255),
+    token_usage       JSONB DEFAULT '{}',
+    idempotency_key   VARCHAR(255) UNIQUE,
+    started_at        TIMESTAMPTZ,
+    completed_at      TIMESTAMPTZ,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_agent_runs_organization_id ON agent_runs(organization_id);
+CREATE INDEX idx_agent_runs_agent_type ON agent_runs(agent_type);
+CREATE INDEX idx_agent_runs_status ON agent_runs(status);
+CREATE INDEX idx_agent_runs_parent_run_id ON agent_runs(parent_run_id);
+CREATE INDEX idx_agent_runs_idempotency_key ON agent_runs(idempotency_key);
+
+-- ============================================================
+-- Phase 4: Double-Entry Accounting Ledger
+-- ============================================================
+
+CREATE TYPE account_type AS ENUM ('asset', 'liability', 'equity', 'revenue', 'expense');
+CREATE TYPE ledger_entry_type AS ENUM ('debit', 'credit');
+CREATE TYPE financial_tx_status AS ENUM ('pending', 'posted', 'reversed', 'failed');
+
+CREATE TABLE ledger_accounts (
+    id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id   UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    name              VARCHAR(255) NOT NULL,
+    account_type      account_type NOT NULL,
+    currency          VARCHAR(3) NOT NULL DEFAULT 'USD',
+    balance           NUMERIC(18, 2) NOT NULL DEFAULT 0,
+    is_system_account BOOLEAN NOT NULL DEFAULT FALSE,
+    metadata          JSONB DEFAULT '{}',
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (organization_id, name)
+);
+
+CREATE INDEX idx_ledger_accounts_organization_id ON ledger_accounts(organization_id);
+CREATE INDEX idx_ledger_accounts_account_type ON ledger_accounts(account_type);
+
+CREATE TRIGGER trg_ledger_accounts_updated_at
+    BEFORE UPDATE ON ledger_accounts
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TABLE financial_transactions (
+    id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id   UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    reference_type    VARCHAR(255) NOT NULL,
+    reference_id      UUID,
+    description       TEXT NOT NULL,
+    status            financial_tx_status NOT NULL DEFAULT 'pending',
+    idempotency_key   VARCHAR(255) NOT NULL UNIQUE,
+    posted_at         TIMESTAMPTZ,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_financial_transactions_organization_id ON financial_transactions(organization_id);
+CREATE INDEX idx_financial_transactions_status ON financial_transactions(status);
+CREATE INDEX idx_financial_transactions_idempotency_key ON financial_transactions(idempotency_key);
+CREATE INDEX idx_financial_transactions_reference ON financial_transactions(reference_type, reference_id);
+
+CREATE TABLE ledger_entries (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    transaction_id  UUID NOT NULL REFERENCES financial_transactions(id) ON DELETE CASCADE,
+    account_id      UUID NOT NULL REFERENCES ledger_accounts(id) ON DELETE RESTRICT,
+    entry_type      ledger_entry_type NOT NULL,
+    amount          NUMERIC(18, 2) NOT NULL CHECK (amount > 0),
+    currency        VARCHAR(3) NOT NULL DEFAULT 'USD',
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_ledger_entries_transaction_id ON ledger_entries(transaction_id);
+CREATE INDEX idx_ledger_entries_account_id ON ledger_entries(account_id);
+
+-- Ensure double-entry invariant: every transaction must have balanced debits and credits
+-- This is enforced at the application layer via transactions, but we add a helper view
+CREATE VIEW ledger_transaction_balance AS
+SELECT
+    transaction_id,
+    SUM(CASE WHEN entry_type = 'debit' THEN amount ELSE 0 END) AS total_debits,
+    SUM(CASE WHEN entry_type = 'credit' THEN amount ELSE 0 END) AS total_credits,
+    SUM(CASE WHEN entry_type = 'debit' THEN amount ELSE 0 END) -
+    SUM(CASE WHEN entry_type = 'credit' THEN amount ELSE 0 END) AS balance
+FROM ledger_entries
+GROUP BY transaction_id;

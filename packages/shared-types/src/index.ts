@@ -5,3 +5,7 @@ export * from './outreach';
 export * from './discovery';
 export * from './fintech';
 export * from './jobs';
+export * from './audit';
+export * from './events';
+export * from './agents';
+export * from './ledger';

@@ -6,7 +6,7 @@ import type { JWTPayload, TokenPair } from '@agenticmedia/shared-types';
 export function generateAccessToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
   return jwt.sign(payload, config.JWT_SECRET, {
     expiresIn: config.JWT_EXPIRY,
-  });
+  } as jwt.SignOptions);
 }
 
 export function generateRefreshToken(): string {
