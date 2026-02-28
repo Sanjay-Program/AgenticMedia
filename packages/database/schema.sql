@@ -1,0 +1,2 @@
+-- AgenticMedia database schema
+-- This file is automatically loaded when the PostgreSQL container is first created.
