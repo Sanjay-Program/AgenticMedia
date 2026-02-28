@@ -112,10 +112,10 @@ outreachRouter.post(
         [req.params.id]
       );
 
-      // Enqueue email generation jobs via BullMQ
+      // Enqueue email generation jobs via BullMQ concurrently
       const outreachQueue = getOutreachQueue();
-      for (const email of emails.rows) {
-        await outreachQueue.add('generate-email', {
+      await Promise.all(emails.rows.map((email) =>
+        outreachQueue.add('generate-email', {
           organizationId: req.user!.organizationId,
           campaignId: req.params.id,
           emailId: email.email_id,
@@ -125,8 +125,8 @@ outreachRouter.post(
           contactName: email.contact_name,
           contactEmail: email.contact_email,
           companyName: email.company_name,
-        });
-      }
+        })
+      ));
 
       // Update campaign status
       await query(

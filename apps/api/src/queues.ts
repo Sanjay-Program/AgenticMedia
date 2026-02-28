@@ -1,15 +1,12 @@
-import { Queue, type ConnectionOptions } from 'bullmq';
-import IORedis from 'ioredis';
+import { Queue } from 'bullmq';
 
-let connection: IORedis | null = null;
-
-function getRedisConnection(): ConnectionOptions {
-  if (!connection) {
-    connection = new IORedis(process.env.REDIS_URL || 'redis://localhost:6379', {
-      maxRetriesPerRequest: null,
-    });
-  }
-  return connection as ConnectionOptions;
+function getRedisOptions() {
+  return {
+    connection: {
+      host: new URL(process.env.REDIS_URL || 'redis://localhost:6379').hostname,
+      port: Number(new URL(process.env.REDIS_URL || 'redis://localhost:6379').port) || 6379,
+    },
+  };
 }
 
 let outreachQueue: Queue | null = null;
@@ -18,21 +15,21 @@ let payoutQueue: Queue | null = null;
 
 export function getOutreachQueue(): Queue {
   if (!outreachQueue) {
-    outreachQueue = new Queue('outreach', { connection: getRedisConnection() });
+    outreachQueue = new Queue('outreach', getRedisOptions());
   }
   return outreachQueue;
 }
 
 export function getDiscoveryQueue(): Queue {
   if (!discoveryQueue) {
-    discoveryQueue = new Queue('discovery', { connection: getRedisConnection() });
+    discoveryQueue = new Queue('discovery', getRedisOptions());
   }
   return discoveryQueue;
 }
 
 export function getPayoutQueue(): Queue {
   if (!payoutQueue) {
-    payoutQueue = new Queue('payout', { connection: getRedisConnection() });
+    payoutQueue = new Queue('payout', getRedisOptions());
   }
   return payoutQueue;
 }

@@ -37,7 +37,13 @@ authRouter.post(
 
       const orgId = uuidv4();
       const userId = uuidv4();
-      const slug = organizationName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      let slug = organizationName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+      // Ensure slug uniqueness
+      const slugExists = await query('SELECT id FROM organizations WHERE slug = $1', [slug]);
+      if (slugExists.rows.length > 0) {
+        slug = `${slug}-${userId.substring(0, 8)}`;
+      }
       const passwordHash = await bcrypt.hash(password, 12);
 
       // Create organization and admin user in transaction

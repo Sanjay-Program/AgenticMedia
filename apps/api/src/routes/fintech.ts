@@ -82,8 +82,8 @@ fintechRouter.post(
     try {
       const { campaignId, terms, platformFeePercent, agencyFeePercent, creatorPayoutPercent } = req.body;
 
-      // Validate percentages sum to 100
-      if (Math.abs(platformFeePercent + agencyFeePercent + creatorPayoutPercent - 100) > 0.01) {
+      const FEE_PERCENTAGE_TOLERANCE = 0.01;
+      if (Math.abs(platformFeePercent + agencyFeePercent + creatorPayoutPercent - 100) > FEE_PERCENTAGE_TOLERANCE) {
         throw new AppError(400, 'Fee percentages must sum to 100');
       }
 
