@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,6 +16,12 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <!-- Skip to Content (Accessibility) -->
+  <a href="#main-content" class="skip-to-content">Skip to content</a>
+
+  <!-- Mobile Overlay -->
+  <div class="nav-mobile-overlay" id="nav-mobile-overlay"></div>
+
   <!-- Navigation -->
   <nav class="nav">
     <div class="container nav-inner">
@@ -31,11 +37,21 @@
         <a href="signin.html" class="btn btn-outline">Sign In</a>
         <a href="signup.html" class="btn btn-primary">Get Started</a>
       </div>
+      <div class="theme-switcher">
+        <button class="theme-btn" aria-label="Switch theme">🌙</button>
+        <div class="theme-dropdown">
+          <button class="theme-option" data-theme="dark"><span class="theme-option-swatch" style="background:#0a0a0f"></span> 🌙 Dark</button>
+          <button class="theme-option" data-theme="light"><span class="theme-option-swatch" style="background:#f8f9fc"></span> ☀️ Light</button>
+          <button class="theme-option" data-theme="midnight"><span class="theme-option-swatch" style="background:#0c1222"></span> 🌊 Midnight</button>
+          <button class="theme-option" data-theme="sunset"><span class="theme-option-swatch" style="background:#1a1014"></span> 🌅 Sunset</button>
+        </div>
+      </div>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">☰</button>
     </div>
   </nav>
 
   <!-- Hero Section -->
-  <section class="hero">
+  <section class="hero" id="main-content">
     <div class="container hero-inner">
       <div class="hero-badge">🚀 Sovereign Enterprise OS</div>
       <h1 class="hero-title">
@@ -77,7 +93,7 @@
   </section>
 
   <!-- Features Section -->
-  <section id="features" class="section">
+  <section id="features" class="section fade-in-up">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Full Enterprise Platform</h2>
@@ -185,7 +201,7 @@
   </section>
 
   <!-- Integrations Section -->
-  <section id="integrations" class="section section-dark">
+  <section id="integrations" class="section section-dark fade-in-up">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">All Social Media Connections</h2>
@@ -241,7 +257,7 @@
   </section>
 
   <!-- Architecture Section -->
-  <section id="architecture" class="section">
+  <section id="architecture" class="section fade-in-up">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">Enterprise Tech Stack</h2>
@@ -308,7 +324,7 @@
   </section>
 
   <!-- AI Agents Section -->
-  <section id="agents" class="section section-dark">
+  <section id="agents" class="section section-dark fade-in-up">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title">The Agentic Fleet</h2>
@@ -383,7 +399,7 @@
   </section>
 
   <!-- CTA Section -->
-  <section class="cta-section">
+  <section class="cta-section fade-in-up">
     <div class="container">
       <h2>Ready to Automate the Creator Economy?</h2>
       <p>Join 500+ agencies deploying AI agents with AgenticMedia.</p>

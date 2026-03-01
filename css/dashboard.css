@@ -1471,3 +1471,156 @@
 .sidebar-overlay.active {
   display: block;
 }
+
+/* ========== Dashboard Theme Enhancements ========== */
+.topbar .theme-switcher {
+  margin-right: 4px;
+}
+
+.topbar .theme-btn {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+}
+
+/* Sidebar collapse */
+.sidebar.collapsed {
+  width: 64px;
+}
+
+.sidebar.collapsed .sidebar-label,
+.sidebar.collapsed .sidebar-link span:last-child,
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed .user-info,
+.sidebar.collapsed .sidebar-logout {
+  display: none;
+}
+
+.sidebar.collapsed .sidebar-link {
+  justify-content: center;
+  padding: 12px;
+}
+
+.sidebar.collapsed .sidebar-icon {
+  margin: 0;
+  font-size: 18px;
+}
+
+.sidebar.collapsed + .dashboard-main {
+  margin-left: 64px;
+}
+
+.sidebar-collapse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--bg-card-dark);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+  margin-left: auto;
+}
+
+.sidebar-collapse-btn:hover {
+  background: var(--accent-indigo);
+  color: #fff;
+  border-color: var(--accent-indigo);
+}
+
+/* Page transition animation */
+.page {
+  animation: pageIn 0.3s ease;
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stat card hover in dashboard */
+.stat-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--shadow-color, rgba(0,0,0,0.2));
+}
+
+/* Breadcrumb navigation */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.breadcrumb a {
+  color: var(--text-muted);
+  transition: color 0.15s;
+}
+
+.breadcrumb a:hover {
+  color: var(--accent-indigo);
+}
+
+.breadcrumb-sep {
+  font-size: 10px;
+}
+
+/* Keyboard shortcut hints */
+.sidebar-link .kbd-hint {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--text-muted);
+  background: var(--bg-card-dark);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  opacity: 0.6;
+}
+
+/* Light theme sidebar overrides */
+[data-theme="light"] .sidebar {
+  background: #ffffff;
+  border-right-color: #e2e4ea;
+}
+
+[data-theme="light"] .topbar {
+  background: #ffffff;
+  border-bottom-color: #e2e4ea;
+}
+
+[data-theme="light"] .search-input {
+  background: #f1f3f8;
+  border-color: #e2e4ea;
+  color: #1a1a2e;
+}
+
+[data-theme="light"] .stat-card {
+  background: #ffffff;
+  border-color: #e2e4ea;
+}
+
+[data-theme="light"] .sidebar-link:hover,
+[data-theme="light"] .sidebar-link.active {
+  background: rgba(91, 95, 199, 0.08);
+}
+
+[data-theme="light"] .dash-card {
+  background: #ffffff;
+  border-color: #e2e4ea;
+}

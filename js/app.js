@@ -1,6 +1,128 @@
 /* AgenticMedia — Client-side Form Handling & Interactivity */
 
+/* ========== Theme Engine (runs before DOMContentLoaded to prevent flash) ========== */
+(function () {
+  var THEME_KEY = 'agenticmedia_theme';
+  var THEMES = ['dark', 'light', 'midnight', 'sunset'];
+  var THEME_META = {
+    dark:     { icon: '🌙', label: 'Dark',     swatch: '#0a0a0f' },
+    light:    { icon: '☀️', label: 'Light',    swatch: '#f8f9fc' },
+    midnight: { icon: '🌊', label: 'Midnight', swatch: '#0c1222' },
+    sunset:   { icon: '🌅', label: 'Sunset',   swatch: '#1a1014' }
+  };
+
+  function getSavedTheme() {
+    try { return localStorage.getItem(THEME_KEY); } catch (e) { return null; }
+  }
+
+  function getSystemTheme() {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
+    return 'dark';
+  }
+
+  function applyTheme(theme) {
+    if (THEMES.indexOf(theme) === -1) theme = 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+    try { localStorage.setItem(THEME_KEY, theme); } catch (e) { /* ignore */ }
+    // Update meta theme-color
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', THEME_META[theme].swatch);
+  }
+
+  // Apply saved or system theme immediately
+  var savedTheme = getSavedTheme();
+  applyTheme(savedTheme || getSystemTheme());
+
+  // Listen for system theme changes
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function (e) {
+      if (!getSavedTheme()) applyTheme(e.matches ? 'light' : 'dark');
+    });
+  }
+
+  // Expose globally
+  window.AgenticTheme = {
+    THEMES: THEMES,
+    META: THEME_META,
+    apply: applyTheme,
+    current: function () { return document.documentElement.getAttribute('data-theme') || 'dark'; }
+  };
+})();
+
 document.addEventListener('DOMContentLoaded', function () {
+  // ========== Theme Switcher UI ==========
+  document.querySelectorAll('.theme-btn').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var dropdown = this.nextElementSibling;
+      if (!dropdown) return;
+      var isOpen = dropdown.classList.contains('open');
+      // Close all dropdowns
+      document.querySelectorAll('.theme-dropdown').forEach(function (d) { d.classList.remove('open'); });
+      if (!isOpen) dropdown.classList.add('open');
+    });
+  });
+
+  document.querySelectorAll('.theme-option').forEach(function (opt) {
+    opt.addEventListener('click', function () {
+      var theme = this.getAttribute('data-theme');
+      window.AgenticTheme.apply(theme);
+      // Update active states
+      document.querySelectorAll('.theme-option').forEach(function (o) { o.classList.remove('active'); });
+      document.querySelectorAll('.theme-option[data-theme="' + theme + '"]').forEach(function (o) { o.classList.add('active'); });
+      // Update button icons
+      document.querySelectorAll('.theme-btn').forEach(function (b) { b.textContent = window.AgenticTheme.META[theme].icon; });
+      // Close dropdown
+      document.querySelectorAll('.theme-dropdown').forEach(function (d) { d.classList.remove('open'); });
+    });
+  });
+
+  // Close theme dropdown on outside click
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.theme-switcher')) {
+      document.querySelectorAll('.theme-dropdown').forEach(function (d) { d.classList.remove('open'); });
+    }
+  });
+
+  // Set initial active theme option
+  var currentTheme = window.AgenticTheme.current();
+  document.querySelectorAll('.theme-option[data-theme="' + currentTheme + '"]').forEach(function (o) { o.classList.add('active'); });
+  document.querySelectorAll('.theme-btn').forEach(function (b) { b.textContent = window.AgenticTheme.META[currentTheme].icon; });
+
+  // ========== Mobile Hamburger Menu ==========
+  var hamburger = document.getElementById('nav-hamburger');
+  var navLinks = document.querySelector('.nav-links');
+  var mobileOverlay = document.getElementById('nav-mobile-overlay');
+
+  if (hamburger && navLinks) {
+    hamburger.addEventListener('click', function () {
+      navLinks.classList.toggle('mobile-open');
+      if (mobileOverlay) mobileOverlay.classList.toggle('open');
+    });
+  }
+
+  if (mobileOverlay) {
+    mobileOverlay.addEventListener('click', function () {
+      if (navLinks) navLinks.classList.remove('mobile-open');
+      mobileOverlay.classList.remove('open');
+    });
+  }
+
+  // ========== Scroll Animations ==========
+  var animatedElements = document.querySelectorAll('.fade-in-up');
+  if (animatedElements.length > 0 && 'IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    animatedElements.forEach(function (el) { observer.observe(el); });
+  }
+
   // ========== Password Toggle ==========
   document.querySelectorAll('.password-toggle').forEach(function (btn) {
     btn.addEventListener('click', function () {
