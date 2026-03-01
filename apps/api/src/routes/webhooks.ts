@@ -16,12 +16,15 @@ webhookRouter.post('/contact', async (req: Request, res: Response, next: NextFun
     }
 
     // Store contact submission in audit_events for tracking
+    const eventId = uuidv4();
+    const resourceId = uuidv4();
     await query(
       `INSERT INTO audit_events (id, organization_id, actor_type, actor_id, action, resource_type, resource_id, metadata)
-       VALUES ($1, '00000000-0000-0000-0000-000000000000', 'anonymous', $2, 'contact_form_submitted', 'contact', $1, $3)`,
+       VALUES ($1, '00000000-0000-0000-0000-000000000000', 'anonymous', $2, 'contact_form_submitted', 'contact', $3, $4)`,
       [
-        uuidv4(),
+        eventId,
         email,
+        resourceId,
         JSON.stringify({ firstName, lastName, email, subject, message, submittedAt: new Date().toISOString() })
       ]
     );

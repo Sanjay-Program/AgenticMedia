@@ -196,7 +196,8 @@ document.addEventListener('DOMContentLoaded', function () {
   if (securityForm) {
     securityForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      var currentPw = document.getElementById('current-password') ? document.getElementById('current-password').value : '';
+      var currentPwEl = document.getElementById('current-password');
+      var currentPw = currentPwEl ? currentPwEl.value : '';
       var newPw = document.getElementById('new-password').value;
       var confirmPw = document.getElementById('confirm-password').value;
       if (!newPw || newPw.length < 8) {
