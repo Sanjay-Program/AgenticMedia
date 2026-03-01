@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing — AgenticMedia</title>
+  <meta name="description" content="AgenticMedia pricing plans. From free starter to custom enterprise plans for talent agencies and media companies.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">A</span>
+        <span class="logo-text">AgenticMedia</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html#features">Features</a>
+        <a href="contact.html">Contact</a>
+        <a href="signin.html" class="btn btn-outline">Sign In</a>
+        <a href="signup.html" class="btn btn-primary">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Pricing Hero -->
+  <section class="hero pricing-hero">
+    <div class="container hero-inner">
+      <div class="hero-badge">💎 Simple, Transparent Pricing</div>
+      <h1 class="hero-title">
+        Plans for Every<br>
+        <span class="gradient-text">Stage of Growth</span>
+      </h1>
+      <p class="hero-subtitle">
+        Start free. Scale to enterprise. No hidden fees.<br>
+        All plans include AI agents, analytics, and integrations.
+      </p>
+      <div class="billing-toggle">
+        <span class="toggle-label active" data-period="monthly">Monthly</span>
+        <button class="toggle-switch" id="billing-toggle" aria-label="Toggle billing period">
+          <span class="toggle-knob"></span>
+        </button>
+        <span class="toggle-label" data-period="annual">Annual <span class="save-badge">Save 20%</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Cards -->
+  <section class="section pricing-section">
+    <div class="container">
+      <div class="pricing-grid">
+        <!-- Starter Plan -->
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3>Starter</h3>
+            <p class="pricing-desc">For solo creators getting started</p>
+          </div>
+          <div class="pricing-price">
+            <span class="price-amount" data-monthly="0" data-annual="0">$0</span>
+            <span class="price-period">/month</span>
+          </div>
+          <a href="signup.html?plan=starter" class="btn btn-secondary btn-full">Start Free →</a>
+          <ul class="pricing-features">
+            <li class="included">✓ 1 Social platform connection</li>
+            <li class="included">✓ Basic analytics dashboard</li>
+            <li class="included">✓ 1 AI agent (Scout)</li>
+            <li class="included">✓ 100 agent runs/month</li>
+            <li class="included">✓ Community support</li>
+            <li class="excluded">✗ Deal Room</li>
+            <li class="excluded">✗ Stripe payments</li>
+            <li class="excluded">✗ Custom workflows</li>
+          </ul>
+        </div>
+
+        <!-- Professional Plan -->
+        <div class="pricing-card pricing-popular">
+          <div class="popular-badge">Most Popular</div>
+          <div class="pricing-header">
+            <h3>Professional</h3>
+            <p class="pricing-desc">For growing agencies & creators</p>
+          </div>
+          <div class="pricing-price">
+            <span class="price-amount" data-monthly="99" data-annual="79">$99</span>
+            <span class="price-period">/month</span>
+          </div>
+          <a href="signup.html?plan=professional" class="btn btn-primary btn-full">Get Started →</a>
+          <ul class="pricing-features">
+            <li class="included">✓ 5 Social platform connections</li>
+            <li class="included">✓ Full analytics dashboard</li>
+            <li class="included">✓ All 4 AI agents</li>
+            <li class="included">✓ 5,000 agent runs/month</li>
+            <li class="included">✓ Deal Room access</li>
+            <li class="included">✓ Stripe Connect payments</li>
+            <li class="included">✓ 8 Pre-built workflows</li>
+            <li class="included">✓ Email + chat support</li>
+          </ul>
+        </div>
+
+        <!-- Enterprise Plan -->
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3>Enterprise</h3>
+            <p class="pricing-desc">For large agencies & media companies</p>
+          </div>
+          <div class="pricing-price">
+            <span class="price-amount">Custom</span>
+            <span class="price-period">&nbsp;</span>
+          </div>
+          <a href="contact.html?plan=enterprise" class="btn btn-secondary btn-full">Contact Sales →</a>
+          <ul class="pricing-features">
+            <li class="included">✓ Unlimited connections</li>
+            <li class="included">✓ White-label dashboard</li>
+            <li class="included">✓ Unlimited AI agents</li>
+            <li class="included">✓ Unlimited agent runs</li>
+            <li class="included">✓ Custom Deal Room branding</li>
+            <li class="included">✓ Advanced split payments</li>
+            <li class="included">✓ Custom automation workflows</li>
+            <li class="included">✓ SSO/SAML + ABAC policies</li>
+            <li class="included">✓ Dedicated account manager</li>
+            <li class="included">✓ SLA + 24/7 phone support</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Comparison -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Compare All Features</h2>
+        <p class="section-subtitle">Detailed breakdown of what's included in each plan</p>
+      </div>
+
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Starter</th>
+              <th>Professional</th>
+              <th>Enterprise</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Social Platforms</td><td>1</td><td>5</td><td>Unlimited</td></tr>
+            <tr><td>AI Agents</td><td>Scout only</td><td>All 4</td><td>Unlimited</td></tr>
+            <tr><td>Agent Runs/month</td><td>100</td><td>5,000</td><td>Unlimited</td></tr>
+            <tr><td>Deal Room</td><td>—</td><td>✓</td><td>Custom branded</td></tr>
+            <tr><td>Stripe Payments</td><td>—</td><td>✓</td><td>Advanced splits</td></tr>
+            <tr><td>Automation Workflows</td><td>—</td><td>8 pre-built</td><td>Custom</td></tr>
+            <tr><td>HubSpot Integration</td><td>—</td><td>✓</td><td>✓</td></tr>
+            <tr><td>Gmail + Slack</td><td>—</td><td>✓</td><td>✓</td></tr>
+            <tr><td>SSO/SAML</td><td>—</td><td>—</td><td>✓</td></tr>
+            <tr><td>ABAC Policies</td><td>—</td><td>Basic</td><td>Advanced</td></tr>
+            <tr><td>Audit Logs</td><td>7 days</td><td>90 days</td><td>Unlimited</td></tr>
+            <tr><td>Support</td><td>Community</td><td>Email + Chat</td><td>24/7 Phone + SLA</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+      </div>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h4>Can I start free and upgrade later?</h4>
+          <p>Yes. The Starter plan is free forever. You can upgrade to Professional or Enterprise at any time without losing your data.</p>
+        </div>
+        <div class="faq-item">
+          <h4>What payment methods do you accept?</h4>
+          <p>We accept all major credit/debit cards (Visa, Mastercard, Amex), UPI, net banking, and wire transfers for Enterprise plans via Stripe.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Is there a free trial for Professional?</h4>
+          <p>Yes. Every Professional plan comes with a 14-day free trial. No credit card required to start.</p>
+        </div>
+        <div class="faq-item">
+          <h4>How does the revenue split work?</h4>
+          <p>AgenticMedia takes a 2% platform fee. Your agency keeps 15%, and creators receive 83% — all automated via Stripe Connect with double-entry ledger accounting.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Can I get a custom Enterprise quote?</h4>
+          <p>Absolutely. Contact our sales team at <a href="mailto:sanjaymurugadoss02@gmail.com">sanjaymurugadoss02@gmail.com</a> or call <a href="tel:+917305771789">+91 7305771789</a> for a personalized quote.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Do you offer annual discounts?</h4>
+          <p>Yes. Annual billing saves you 20% on the Professional plan ($79/mo billed annually vs $99/mo billed monthly).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>Ready to Get Started?</h2>
+      <p>Join 500+ agencies automating the creator economy with AgenticMedia.</p>
+      <div class="cta-actions">
+        <a href="signup.html" class="btn btn-primary btn-large">Create Free Account →</a>
+        <a href="contact.html" class="btn btn-secondary btn-large">Talk to Sales</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <div class="logo">
+          <span class="logo-icon">A</span>
+          <span class="logo-text">AgenticMedia</span>
+        </div>
+        <p>The Autonomous Creator Economy Engine.<br>Building the Sovereign Enterprise OS.</p>
+        <div class="footer-contact-info">
+          <a href="mailto:sanjaymurugadoss02@gmail.com">📧 sanjaymurugadoss02@gmail.com</a>
+          <a href="tel:+917305771789">📞 +91 7305771789</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-column">
+          <h5>Platform</h5>
+          <a href="index.html#features">Features</a>
+          <a href="index.html#integrations">Integrations</a>
+          <a href="index.html#agents">AI Agents</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+        <div class="footer-column">
+          <h5>Company</h5>
+          <a href="contact.html">Contact Us</a>
+          <a href="index.html#architecture">Architecture</a>
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+        </div>
+        <div class="footer-column">
+          <h5>Account</h5>
+          <a href="signin.html">Sign In</a>
+          <a href="signup.html">Create Account</a>
+          <a href="https://github.com/Sanjay-Program/AgenticMedia" target="_blank" rel="noopener">GitHub</a>
+          <a href="#">API Docs</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 AgenticMedia. Sovereign Enterprise OS. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

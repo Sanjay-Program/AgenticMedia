@@ -7,9 +7,13 @@ on:
     branches: [main]
     paths:
       - 'index.html'
+      - 'signin.html'
+      - 'signup.html'
+      - 'pricing.html'
+      - 'contact.html'
       - 'css/**'
-      - 'assets/**'
       - 'js/**'
+      - 'assets/**'
       - 'docs/**'
   workflow_dispatch:
 
