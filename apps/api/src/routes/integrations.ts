@@ -67,7 +67,9 @@ integrationsRouter.get(
         provider,
       })).toString('base64');
 
-      const redirectUri = `${config.FRONTEND_URL}/api/integrations/callback/${provider}`;
+      // The redirect URI points to our API server's callback endpoint
+      const apiBaseUrl = `http://localhost:${config.PORT}`;
+      const redirectUri = `${apiBaseUrl}/api/integrations/callback/${provider}`;
 
       switch (provider) {
         case 'hubspot':
