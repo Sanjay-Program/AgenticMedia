@@ -65,7 +65,7 @@ videoRouter.get('/jobs', async (req: Request, res: Response, next: NextFunction)
 
     const result = await query(
       `SELECT * FROM video_jobs WHERE ${conditions.join(' AND ')}
-       ORDER BY created_at DESC LIMIT $${idx++} OFFSET $${idx}`,
+       ORDER BY created_at DESC LIMIT $${idx} OFFSET $${idx + 1}`,
       params
     );
 

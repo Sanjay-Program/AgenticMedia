@@ -42,8 +42,7 @@ sentimentRouter.post(
 // Webhook endpoint for incoming comments from social platforms
 sentimentRouter.post('/webhook/comments', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-    const { organizationId, creatorPlatformId, platform, comments } = body;
+    const { organizationId, creatorPlatformId, platform, comments } = req.body;
 
     if (!organizationId || !creatorPlatformId || !platform || !Array.isArray(comments)) {
       res.status(400).json({ error: 'Missing required fields' });
