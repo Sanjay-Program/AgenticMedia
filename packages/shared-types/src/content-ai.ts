@@ -110,8 +110,8 @@ export function predictHookRetention(hookText: string): number {
   if (hookText.length <= 60) score += 0.07;
   if (hookText.length <= 40) score += 0.05;
 
-  // Capitalize first word = authority
-  if (hookText[0] === hookText[0]?.toUpperCase()) score += 0.03;
+  // Capitalize first word = authority (only letter characters)
+  if (hookText[0] && /[A-Z]/.test(hookText[0])) score += 0.03;
 
   return Math.min(score, 0.95);
 }

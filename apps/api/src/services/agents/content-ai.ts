@@ -32,7 +32,7 @@ export function generateViralHooks(originalHook: string, topic: string): ViralHo
       suggestedHook,
       retentionPrediction: predictHookRetention(suggestedHook),
       emotionalTrigger: ht.trigger,
-      confidenceScore: 0.65 + Math.random() * 0.20, // In production this comes from ML model
+      confidenceScore: 0.65 + Math.random() * 0.20, // TODO: Replace with ML model score in production
     };
   }).sort((a, b) => b.retentionPrediction - a.retentionPrediction);
 }

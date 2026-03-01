@@ -8,6 +8,9 @@ import { query } from '@agenticmedia/database';
 import { calculatePortfolioHealth, classifyRiskColor } from '@agenticmedia/shared-types';
 import type { PortfolioCreator } from '@agenticmedia/shared-types';
 
+const CREATOR_REVENUE_SHARE = 0.83;
+const AGENCY_REVENUE_SHARE = 0.15;
+
 const warRoomRouter = Router();
 
 // ──────────────────────────────────────────────────────────────
@@ -42,8 +45,8 @@ warRoomRouter.get(
         timestamp: new Date().toISOString(),
         gmv,
         platformFee,
-        creatorRevenue: Math.round(gmv * 0.83 * 100) / 100,
-        agencyShare: Math.round(gmv * 0.15 * 100) / 100,
+        creatorRevenue: Math.round(gmv * CREATOR_REVENUE_SHARE * 100) / 100,
+        agencyShare: Math.round(gmv * AGENCY_REVENUE_SHARE * 100) / 100,
         periodStart: new Date(Date.now() - 30 * 86400000).toISOString(),
         periodEnd: new Date().toISOString(),
       });
