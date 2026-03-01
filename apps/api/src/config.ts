@@ -14,6 +14,8 @@ const envSchema = z.object({
   STRIPE_WEBHOOK_SECRET: z.string().default('whsec_placeholder'),
   STRIPE_PLATFORM_FEE_PERCENT: z.coerce.number().default(2),
   FRONTEND_URL: z.string().default('http://localhost:3000'),
+  OPENAI_API_KEY: z.string().default('sk-placeholder'),
+  DEFAULT_LLM_MODEL: z.string().default('gpt-4o'),
 });
 
 function loadConfig() {
