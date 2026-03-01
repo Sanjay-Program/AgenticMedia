@@ -64,7 +64,7 @@ export const WITHHOLDING_TAX_RATES: Record<string, number> = {
   AU: 0.15,   // Australia
   BR: 0.15,   // Brazil
   JP: 0.10,   // Japan (treaty rate)
-  DEFAULT: 0.30,  // Default international rate
+  default: 0.30,  // Default international rate
 };
 
 export const VAT_RATES: Record<string, number> = {
@@ -78,5 +78,5 @@ export const VAT_RATES: Record<string, number> = {
   IN: 0.18,   // India GST
   AU: 0.10,   // Australia GST
   CA: 0.05,   // Canada GST (federal only)
-  DEFAULT: 0,
+  default: 0,
 };

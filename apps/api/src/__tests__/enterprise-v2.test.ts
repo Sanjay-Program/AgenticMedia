@@ -382,8 +382,8 @@ describe('Enterprise V2: Compliance & Tax', () => {
     });
 
     it('should have a DEFAULT rate', () => {
-      expect(WITHHOLDING_TAX_RATES.DEFAULT).toBeDefined();
-      expect(WITHHOLDING_TAX_RATES.DEFAULT).toBeGreaterThan(0);
+      expect(WITHHOLDING_TAX_RATES.default).toBeDefined();
+      expect(WITHHOLDING_TAX_RATES.default).toBeGreaterThan(0);
     });
 
     it('should have all rates between 0 and 1', () => {
@@ -400,7 +400,7 @@ describe('Enterprise V2: Compliance & Tax', () => {
     });
 
     it('should have DEFAULT at 0', () => {
-      expect(VAT_RATES.DEFAULT).toBe(0);
+      expect(VAT_RATES.default).toBe(0);
     });
   });
 });

@@ -246,9 +246,9 @@ enterpriseRouter.get(
       const { country } = req.query;
       const { WITHHOLDING_TAX_RATES, VAT_RATES } = await import('@agenticmedia/shared-types');
 
-      const countryCode = (country as string || 'DEFAULT').toUpperCase();
-      const withholdingRate = WITHHOLDING_TAX_RATES[countryCode] ?? WITHHOLDING_TAX_RATES.DEFAULT;
-      const vatRate = VAT_RATES[countryCode] ?? VAT_RATES.DEFAULT;
+      const countryCode = country ? (country as string).toUpperCase() : '';
+      const withholdingRate = WITHHOLDING_TAX_RATES[countryCode] ?? WITHHOLDING_TAX_RATES.default;
+      const vatRate = VAT_RATES[countryCode] ?? VAT_RATES.default;
 
       res.json({
         country: countryCode,
