@@ -19,3 +19,7 @@ export * from './cpm';
 export * from './campaign-ai';
 export * from './compliance';
 export * from './brand-safety';
+export * from './creator-intelligence';
+export * from './fintech-infrastructure';
+export * from './content-ai';
+export * from './war-room';

@@ -812,3 +812,106 @@ CREATE TABLE tax_documents (
 CREATE INDEX idx_tax_docs_org ON tax_documents(organization_id);
 CREATE INDEX idx_tax_docs_recipient ON tax_documents(recipient_id);
 CREATE INDEX idx_tax_docs_year ON tax_documents(tax_year);
+
+-- ================================================================
+-- PHASE 8: Enterprise V3 — Intelligence, Fintech, Content AI,
+--           War Room (Creator Intelligence Superlayer)
+-- ================================================================
+
+-- Creator Risk Assessments
+CREATE TABLE IF NOT EXISTS creator_risk_assessments (
+    id                     UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    creator_id             UUID NOT NULL REFERENCES creators(id),
+    organization_id        UUID NOT NULL REFERENCES organizations(id),
+    overall_risk_score     INTEGER NOT NULL CHECK (overall_risk_score BETWEEN 0 AND 100),
+    risk_level             VARCHAR(20) NOT NULL,
+    cancel_probability     NUMERIC(5, 3) NOT NULL DEFAULT 0,
+    reputation_volatility  NUMERIC(5, 3) NOT NULL DEFAULT 0,
+    audience_toxicity_score INTEGER NOT NULL DEFAULT 0,
+    signals                JSONB NOT NULL DEFAULT '[]',
+    assessed_at            TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX idx_risk_assess_creator ON creator_risk_assessments(creator_id);
+CREATE INDEX idx_risk_assess_org ON creator_risk_assessments(organization_id);
+CREATE INDEX idx_risk_assess_score ON creator_risk_assessments(overall_risk_score DESC);
+
+-- Creator LTV Predictions
+CREATE TABLE IF NOT EXISTS creator_ltv_predictions (
+    id                     UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    creator_id             UUID NOT NULL REFERENCES creators(id),
+    organization_id        UUID NOT NULL REFERENCES organizations(id),
+    six_month_revenue      NUMERIC(12, 2) NOT NULL DEFAULT 0,
+    twelve_month_revenue   NUMERIC(12, 2) NOT NULL DEFAULT 0,
+    viral_probability      NUMERIC(5, 3) NOT NULL DEFAULT 0,
+    plateau_risk_score     INTEGER NOT NULL DEFAULT 0,
+    burnout_risk_score     INTEGER NOT NULL DEFAULT 0,
+    growth_trajectory      VARCHAR(20) NOT NULL DEFAULT 'stagnant',
+    confidence_score       NUMERIC(5, 2) NOT NULL DEFAULT 0,
+    predicted_at           TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX idx_ltv_creator ON creator_ltv_predictions(creator_id);
+CREATE INDEX idx_ltv_org ON creator_ltv_predictions(organization_id);
+
+-- Financing Applications
+CREATE TABLE IF NOT EXISTS financing_applications (
+    id                          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    creator_id                  UUID NOT NULL REFERENCES creators(id),
+    organization_id             UUID NOT NULL REFERENCES organizations(id),
+    requested_amount            NUMERIC(12, 2) NOT NULL,
+    approved_amount             NUMERIC(12, 2),
+    repayment_rate              NUMERIC(5, 3) NOT NULL DEFAULT 0.05,
+    predicted_six_month_revenue NUMERIC(12, 2) NOT NULL DEFAULT 0,
+    risk_score                  INTEGER NOT NULL DEFAULT 0,
+    status                      VARCHAR(30) NOT NULL DEFAULT 'pending',
+    disbursed_at                TIMESTAMPTZ,
+    completed_at                TIMESTAMPTZ,
+    created_at                  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX idx_financing_creator ON financing_applications(creator_id);
+CREATE INDEX idx_financing_org ON financing_applications(organization_id);
+CREATE INDEX idx_financing_status ON financing_applications(status);
+
+-- Insurance Policies
+CREATE TABLE IF NOT EXISTS insurance_policies (
+    id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    creator_id        UUID NOT NULL REFERENCES creators(id),
+    organization_id   UUID NOT NULL REFERENCES organizations(id),
+    type              VARCHAR(30) NOT NULL,
+    status            VARCHAR(20) NOT NULL DEFAULT 'quoted',
+    coverage_amount   NUMERIC(12, 2) NOT NULL,
+    premium_monthly   NUMERIC(10, 2) NOT NULL,
+    deductible        NUMERIC(10, 2) NOT NULL DEFAULT 0,
+    start_date        DATE,
+    end_date          DATE,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX idx_insurance_creator ON insurance_policies(creator_id);
+CREATE INDEX idx_insurance_org ON insurance_policies(organization_id);
+
+-- Content AI Jobs
+CREATE TABLE IF NOT EXISTS content_ai_jobs (
+    id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    organization_id   UUID NOT NULL REFERENCES organizations(id),
+    creator_id        UUID NOT NULL REFERENCES creators(id),
+    type              VARCHAR(30) NOT NULL,
+    status            VARCHAR(20) NOT NULL DEFAULT 'queued',
+    input             JSONB NOT NULL DEFAULT '{}',
+    output            JSONB,
+    tokens_used       INTEGER NOT NULL DEFAULT 0,
+    cost_estimate     NUMERIC(8, 4) NOT NULL DEFAULT 0,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    completed_at      TIMESTAMPTZ
+);
+CREATE INDEX idx_content_ai_org ON content_ai_jobs(organization_id);
+CREATE INDEX idx_content_ai_creator ON content_ai_jobs(creator_id);
+CREATE INDEX idx_content_ai_type ON content_ai_jobs(type);
+
+-- War Room Snapshots
+CREATE TABLE IF NOT EXISTS war_room_snapshots (
+    id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    organization_id   UUID NOT NULL REFERENCES organizations(id),
+    snapshot_data     JSONB NOT NULL DEFAULT '{}',
+    captured_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX idx_warroom_org ON war_room_snapshots(organization_id);
+CREATE INDEX idx_warroom_captured ON war_room_snapshots(captured_at DESC);

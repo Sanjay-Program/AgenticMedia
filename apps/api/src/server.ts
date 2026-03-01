@@ -23,6 +23,10 @@ import { videoRouter } from './routes/video';
 import { sentimentRouter } from './routes/sentiment';
 import { brandingRouter } from './routes/branding';
 import { enterpriseRouter } from './routes/enterprise';
+import { intelligenceRouter } from './routes/intelligence';
+import { fintechV2Router } from './routes/fintech-v2';
+import { contentAIRouter } from './routes/content-ai';
+import { warRoomRouter } from './routes/war-room';
 import { errorHandler } from './middleware/error-handler';
 import { swaggerSpec } from './docs/swagger';
 import { initializeOrchestrator } from './services/agents/orchestrator';
@@ -75,6 +79,10 @@ app.use('/api/video', videoRouter);
 app.use('/api/sentiment', sentimentRouter);
 app.use('/api/branding', brandingRouter);
 app.use('/api/enterprise', enterpriseRouter);
+app.use('/api/intelligence', intelligenceRouter);
+app.use('/api/fintech-v2', fintechV2Router);
+app.use('/api/content-ai', contentAIRouter);
+app.use('/api/war-room', warRoomRouter);
 
 // Global error handler
 app.use(errorHandler);
