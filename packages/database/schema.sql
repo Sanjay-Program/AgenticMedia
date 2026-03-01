@@ -706,3 +706,109 @@ CREATE INDEX idx_content_assets_status ON content_assets(publish_status);
 CREATE TRIGGER trg_content_assets_updated_at
     BEFORE UPDATE ON content_assets
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================================
+-- Phase 7: Enterprise V2 — Credit Scores, CPM History, Compliance
+-- ============================================================
+
+CREATE TYPE credit_score_grade AS ENUM ('A', 'B', 'C', 'D', 'F');
+CREATE TYPE fraud_signal_severity AS ENUM ('low', 'medium', 'high', 'critical');
+CREATE TYPE compliance_framework AS ENUM ('soc2', 'iso27001', 'gdpr', 'ccpa', 'hipaa');
+CREATE TYPE tax_form_type AS ENUM ('1099-NEC', 'W-8BEN', 'W-9', 'VAT-invoice', 'GST-invoice');
+CREATE TYPE milestone_status AS ENUM ('pending', 'in_progress', 'completed', 'failed', 'disputed');
+
+-- Creator Credit Scores (historical record)
+CREATE TABLE creator_credit_scores (
+    id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id   UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    creator_id        UUID NOT NULL REFERENCES creators(id) ON DELETE CASCADE,
+    overall_score     INTEGER NOT NULL CHECK (overall_score >= 0 AND overall_score <= 100),
+    grade             credit_score_grade NOT NULL,
+    payment_reliability     INTEGER NOT NULL DEFAULT 50,
+    campaign_reliability    INTEGER NOT NULL DEFAULT 50,
+    engagement_authenticity INTEGER NOT NULL DEFAULT 50,
+    audience_quality        INTEGER NOT NULL DEFAULT 50,
+    growth_health           INTEGER NOT NULL DEFAULT 50,
+    fraud_signals     JSONB DEFAULT '[]',
+    calculated_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_credit_scores_creator ON creator_credit_scores(creator_id);
+CREATE INDEX idx_credit_scores_org ON creator_credit_scores(organization_id);
+CREATE INDEX idx_credit_scores_grade ON creator_credit_scores(grade);
+
+-- Historical CPM Records (for dynamic pricing)
+CREATE TABLE cpm_history (
+    id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id   UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    creator_id        UUID NOT NULL REFERENCES creators(id) ON DELETE CASCADE,
+    campaign_id       UUID REFERENCES campaigns(id) ON DELETE SET NULL,
+    platform          platform_type NOT NULL,
+    impressions       BIGINT NOT NULL DEFAULT 0,
+    earnings          NUMERIC(12, 2) NOT NULL DEFAULT 0,
+    actual_cpm        NUMERIC(8, 2) NOT NULL DEFAULT 0,
+    industry          VARCHAR(100),
+    recorded_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_cpm_history_creator ON cpm_history(creator_id);
+CREATE INDEX idx_cpm_history_platform ON cpm_history(platform);
+CREATE INDEX idx_cpm_history_industry ON cpm_history(industry);
+
+-- Contract Milestones (Escrow + performance-based payouts)
+CREATE TABLE contract_milestones (
+    id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    smart_contract_id UUID NOT NULL REFERENCES smart_contracts(id) ON DELETE CASCADE,
+    name              VARCHAR(255) NOT NULL,
+    description       TEXT,
+    target_metric     VARCHAR(100),
+    target_value      NUMERIC(12, 2),
+    current_value     NUMERIC(12, 2) DEFAULT 0,
+    payout_amount     NUMERIC(12, 2) NOT NULL,
+    payout_percent    NUMERIC(5, 2),
+    status            milestone_status NOT NULL DEFAULT 'pending',
+    due_date          TIMESTAMPTZ,
+    completed_at      TIMESTAMPTZ,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_milestones_contract ON contract_milestones(smart_contract_id);
+CREATE INDEX idx_milestones_status ON contract_milestones(status);
+
+CREATE TRIGGER trg_milestones_updated_at
+    BEFORE UPDATE ON contract_milestones
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Compliance Assessments
+CREATE TABLE compliance_assessments (
+    id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id   UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    framework         compliance_framework NOT NULL,
+    status            VARCHAR(50) NOT NULL DEFAULT 'pending_review',
+    controls          JSONB DEFAULT '[]',
+    assessed_by       UUID REFERENCES users(id),
+    assessed_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    next_assessment   TIMESTAMPTZ
+);
+
+CREATE INDEX idx_compliance_org ON compliance_assessments(organization_id);
+CREATE INDEX idx_compliance_framework ON compliance_assessments(framework);
+
+-- Tax Documents
+CREATE TABLE tax_documents (
+    id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id   UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    recipient_id      UUID NOT NULL,
+    recipient_type    VARCHAR(50) NOT NULL,
+    form_type         tax_form_type NOT NULL,
+    tax_year          INTEGER NOT NULL,
+    total_earnings    NUMERIC(12, 2) NOT NULL DEFAULT 0,
+    currency          VARCHAR(3) NOT NULL DEFAULT 'USD',
+    status            VARCHAR(50) NOT NULL DEFAULT 'draft',
+    generated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_tax_docs_org ON tax_documents(organization_id);
+CREATE INDEX idx_tax_docs_recipient ON tax_documents(recipient_id);
+CREATE INDEX idx_tax_docs_year ON tax_documents(tax_year);

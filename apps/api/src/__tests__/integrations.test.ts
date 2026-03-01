@@ -12,8 +12,8 @@ import {
 
 describe('Integration Types', () => {
   describe('INTEGRATION_REGISTRY', () => {
-    it('should contain all 8 supported providers', () => {
-      expect(INTEGRATION_REGISTRY).toHaveLength(8);
+    it('should contain all 12 supported providers', () => {
+      expect(INTEGRATION_REGISTRY).toHaveLength(12);
       const providers = INTEGRATION_REGISTRY.map(i => i.provider);
       expect(providers).toContain('youtube');
       expect(providers).toContain('instagram');
@@ -23,6 +23,10 @@ describe('Integration Types', () => {
       expect(providers).toContain('hubspot');
       expect(providers).toContain('gmail');
       expect(providers).toContain('slack');
+      expect(providers).toContain('salesforce');
+      expect(providers).toContain('netsuite');
+      expect(providers).toContain('sap');
+      expect(providers).toContain('microsoft_teams');
     });
 
     it('should categorize social media providers correctly', () => {
@@ -36,16 +40,17 @@ describe('Integration Types', () => {
       expect(socialNames).toContain('linkedin');
     });
 
-    it('should categorize CRM/email/messaging providers correctly', () => {
+    it('should categorize CRM/email/messaging/enterprise providers correctly', () => {
       const crm = INTEGRATION_REGISTRY.filter(i => i.category === 'crm');
       const email = INTEGRATION_REGISTRY.filter(i => i.category === 'email');
       const messaging = INTEGRATION_REGISTRY.filter(i => i.category === 'messaging');
+      const enterprise = INTEGRATION_REGISTRY.filter(i => i.category === 'enterprise');
       expect(crm).toHaveLength(1);
       expect(email).toHaveLength(1);
-      expect(messaging).toHaveLength(1);
+      expect(messaging).toHaveLength(2); // slack + microsoft_teams
+      expect(enterprise).toHaveLength(3); // salesforce + netsuite + sap
       expect(crm[0].provider).toBe('hubspot');
       expect(email[0].provider).toBe('gmail');
-      expect(messaging[0].provider).toBe('slack');
     });
 
     it('should have valid structure for every integration', () => {

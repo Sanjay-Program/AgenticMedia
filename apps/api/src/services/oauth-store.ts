@@ -16,6 +16,10 @@ const PROVIDER_CATEGORIES: Record<IntegrationProvider, IntegrationCategory> = {
   gmail: 'email',
   google: 'email',
   slack: 'messaging',
+  salesforce: 'enterprise',
+  netsuite: 'enterprise',
+  sap: 'enterprise',
+  microsoft_teams: 'messaging',
 };
 
 export interface StoredIntegration {

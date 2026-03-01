@@ -14,3 +14,8 @@ export * from './scout';
 export * from './video';
 export * from './sentiment';
 export * from './branding';
+export * from './credit-score';
+export * from './cpm';
+export * from './campaign-ai';
+export * from './compliance';
+export * from './brand-safety';

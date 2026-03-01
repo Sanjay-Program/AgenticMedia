@@ -1227,6 +1227,97 @@ const options: swaggerJsdoc.Options = {
           responses: { '200': { description: 'Comments queued for analysis' } },
         },
       },
+
+      // ──────────────────────────────────────────────────────────────
+      // Enterprise V2 — Credit Score, CPM, Compliance
+      // ──────────────────────────────────────────────────────────────
+      '/api/enterprise/creators/{id}/credit-score': {
+        get: {
+          tags: ['Enterprise'],
+          summary: 'Calculate Creator Credit Score',
+          description: 'Returns an AI-powered credit score with fraud signals for a creator, similar to a FICO score for the creator economy.',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: {
+            '200': { description: 'Credit score with components and fraud signals' },
+            '404': { description: 'Creator not found' },
+          },
+        },
+      },
+      '/api/enterprise/cpm-estimate': {
+        post: {
+          tags: ['Enterprise'],
+          summary: 'Dynamic CPM Estimate',
+          description: 'Calculates a dynamic CPM (Cost Per Mille) adjusted for seasonality, industry demand, engagement quality, and conversion potential.',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['creatorId', 'platform'],
+                  properties: {
+                    creatorId: { type: 'string', format: 'uuid' },
+                    platform: { type: 'string' },
+                    industry: { type: 'string' },
+                    brandAvgBudget: { type: 'number' },
+                  },
+                },
+              },
+            },
+          },
+          responses: {
+            '200': { description: 'Dynamic CPM estimate with adjustment factors' },
+          },
+        },
+      },
+      '/api/enterprise/compliance/status': {
+        get: {
+          tags: ['Enterprise'],
+          summary: 'Compliance Status',
+          description: 'Returns SOC 2, GDPR, and other compliance framework status for the organization.',
+          responses: {
+            '200': { description: 'Compliance framework status with control details' },
+          },
+        },
+      },
+      '/api/enterprise/compliance/audit-export': {
+        post: {
+          tags: ['Enterprise'],
+          summary: 'Generate Audit Export',
+          description: 'Generates a downloadable audit export for a specified date range (JSON/CSV/PDF).',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['startDate', 'endDate'],
+                  properties: {
+                    startDate: { type: 'string', format: 'date-time' },
+                    endDate: { type: 'string', format: 'date-time' },
+                    exportType: { type: 'string', enum: ['full', 'financial', 'access', 'data_processing'] },
+                    format: { type: 'string', enum: ['json', 'csv', 'pdf'] },
+                  },
+                },
+              },
+            },
+          },
+          responses: {
+            '200': { description: 'Audit export metadata with download URL' },
+          },
+        },
+      },
+      '/api/enterprise/tax/withholding-rate': {
+        get: {
+          tags: ['Enterprise'],
+          summary: 'Tax Withholding Rate',
+          description: 'Returns withholding tax and VAT rates for a given country code.',
+          parameters: [{ name: 'country', in: 'query', required: false, schema: { type: 'string' } }],
+          responses: {
+            '200': { description: 'Tax rates for the specified country' },
+          },
+        },
+      },
     },
   },
   apis: [],

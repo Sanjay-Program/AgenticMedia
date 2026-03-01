@@ -1,8 +1,8 @@
 // Social Media Connections & Integration Hub Types
 
 export type SocialPlatform = 'youtube' | 'instagram' | 'tiktok' | 'twitter' | 'linkedin';
-export type IntegrationProvider = 'hubspot' | 'gmail' | 'youtube' | 'instagram' | 'tiktok' | 'twitter' | 'linkedin' | 'slack' | 'google';
-export type IntegrationCategory = 'social' | 'crm' | 'email' | 'messaging';
+export type IntegrationProvider = 'hubspot' | 'gmail' | 'youtube' | 'instagram' | 'tiktok' | 'twitter' | 'linkedin' | 'slack' | 'google' | 'salesforce' | 'netsuite' | 'sap' | 'microsoft_teams';
+export type IntegrationCategory = 'social' | 'crm' | 'email' | 'messaging' | 'enterprise';
 export type ConnectionStatus = 'connected' | 'disconnected' | 'expired' | 'error';
 
 export interface SocialConnection {
@@ -145,5 +145,41 @@ export const INTEGRATION_REGISTRY: IntegrationConfig[] = [
     icon: '💬',
     scopes: ['chat:write', 'channels:read'],
     features: ['Deal notifications', 'Agent alerts', 'Team updates', 'Command integration'],
+  },
+  {
+    provider: 'salesforce',
+    category: 'enterprise',
+    name: 'Salesforce',
+    description: 'Sync campaigns, contacts, and revenue data bi-directionally with Salesforce CRM',
+    icon: '☁️',
+    scopes: ['api', 'refresh_token', 'full'],
+    features: ['Contact sync', 'Opportunity pipeline', 'Revenue reporting', 'Custom objects'],
+  },
+  {
+    provider: 'netsuite',
+    category: 'enterprise',
+    name: 'NetSuite',
+    description: 'Export financial transactions, invoices, and accounting data to Oracle NetSuite',
+    icon: '📊',
+    scopes: ['restlets', 'rest_webservices'],
+    features: ['Invoice export', 'Revenue recognition', 'GL entries', 'Vendor sync'],
+  },
+  {
+    provider: 'sap',
+    category: 'enterprise',
+    name: 'SAP',
+    description: 'Enterprise-grade integration with SAP ERP for financial and operational data',
+    icon: '🏢',
+    scopes: ['sap.financial', 'sap.api'],
+    features: ['Financial posting', 'Vendor management', 'Purchase orders', 'Cost centers'],
+  },
+  {
+    provider: 'microsoft_teams',
+    category: 'messaging',
+    name: 'Microsoft Teams',
+    description: 'Receive deal alerts, agent notifications, and collaborate directly in MS Teams',
+    icon: '👥',
+    scopes: ['ChannelMessage.Send', 'Chat.ReadWrite'],
+    features: ['Deal notifications', 'Agent alerts', 'Channel posting', 'Bot integration'],
   },
 ];
