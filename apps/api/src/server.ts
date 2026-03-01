@@ -18,6 +18,10 @@ import { usersRouter } from './routes/users';
 import { organizationsRouter } from './routes/organizations';
 import { auditRouter } from './routes/audit';
 import { ledgerRouter } from './routes/ledger';
+import { scoutRouter } from './routes/scout';
+import { videoRouter } from './routes/video';
+import { sentimentRouter } from './routes/sentiment';
+import { brandingRouter } from './routes/branding';
 import { errorHandler } from './middleware/error-handler';
 import { swaggerSpec } from './docs/swagger';
 import { initializeOrchestrator } from './services/agents/orchestrator';
@@ -65,6 +69,10 @@ app.use('/api/users', usersRouter);
 app.use('/api/organizations', organizationsRouter);
 app.use('/api/audit', auditRouter);
 app.use('/api/ledger', ledgerRouter);
+app.use('/api/scout', scoutRouter);
+app.use('/api/video', videoRouter);
+app.use('/api/sentiment', sentimentRouter);
+app.use('/api/branding', brandingRouter);
 
 // Global error handler
 app.use(errorHandler);

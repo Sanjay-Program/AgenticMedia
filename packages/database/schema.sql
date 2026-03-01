@@ -647,3 +647,62 @@ CREATE INDEX idx_automation_workflows_active ON automation_workflows(is_active);
 CREATE TRIGGER trg_automation_workflows_updated_at
     BEFORE UPDATE ON automation_workflows
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================================
+-- Phase 6: Video Processing & Content Factory
+-- ============================================================
+
+CREATE TYPE video_job_type AS ENUM ('transcribe', 'caption_render', 'clip_extract', 'format_adapt');
+CREATE TYPE video_job_status AS ENUM ('queued', 'transcribing', 'rendering_captions', 'clipping', 'adapting', 'uploading', 'completed', 'failed');
+CREATE TYPE target_platform AS ENUM ('tiktok', 'youtube_shorts', 'instagram_reels', 'linkedin', 'youtube');
+CREATE TYPE content_publish_status AS ENUM ('draft', 'scheduled', 'publishing', 'published', 'failed');
+
+CREATE TABLE video_jobs (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    user_id         UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    job_type        video_job_type NOT NULL,
+    status          video_job_status NOT NULL DEFAULT 'queued',
+    source_file_key TEXT NOT NULL,
+    output_file_keys JSONB DEFAULT '[]',
+    progress        INTEGER NOT NULL DEFAULT 0 CHECK (progress >= 0 AND progress <= 100),
+    metadata        JSONB DEFAULT '{}',
+    error_message   TEXT,
+    started_at      TIMESTAMPTZ,
+    completed_at    TIMESTAMPTZ,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_video_jobs_org_id ON video_jobs(organization_id);
+CREATE INDEX idx_video_jobs_user_id ON video_jobs(user_id);
+CREATE INDEX idx_video_jobs_status ON video_jobs(status);
+CREATE INDEX idx_video_jobs_job_type ON video_jobs(job_type);
+
+CREATE TRIGGER trg_video_jobs_updated_at
+    BEFORE UPDATE ON video_jobs
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TABLE content_assets (
+    id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    video_job_id    UUID NOT NULL REFERENCES video_jobs(id) ON DELETE CASCADE,
+    platform        target_platform NOT NULL,
+    file_key        TEXT NOT NULL,
+    title           VARCHAR(500),
+    description     TEXT,
+    hashtags        JSONB DEFAULT '[]',
+    publish_status  content_publish_status NOT NULL DEFAULT 'draft',
+    published_at    TIMESTAMPTZ,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_content_assets_org_id ON content_assets(organization_id);
+CREATE INDEX idx_content_assets_video_job_id ON content_assets(video_job_id);
+CREATE INDEX idx_content_assets_platform ON content_assets(platform);
+CREATE INDEX idx_content_assets_status ON content_assets(publish_status);
+
+CREATE TRIGGER trg_content_assets_updated_at
+    BEFORE UPDATE ON content_assets
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

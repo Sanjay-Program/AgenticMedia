@@ -40,8 +40,11 @@ export function initializeWebSocket(httpServer: HTTPServer): SocketIOServer {
     'agent.run.failed',
     'payment.succeeded',
     'payment.failed',
+    'email.received',
+    'email.sent',
     'email.replied',
     'social.creator.discovered',
+    'social.metric.updated',
     'contract.signed',
   ];
 

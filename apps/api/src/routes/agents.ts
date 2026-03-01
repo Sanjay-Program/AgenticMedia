@@ -1,6 +1,10 @@
 import { Router, Request, Response, NextFunction } from 'express';
+import { v4 as uuidv4 } from 'uuid';
 import { query } from '@agenticmedia/database';
 import { authenticate } from '../middleware/authenticate';
+import { authorize } from '../middleware/authorize';
+import { publishEvent } from '../services/event-bus';
+import type { EventType } from '@agenticmedia/shared-types';
 
 export const agentsRouter = Router();
 agentsRouter.use(authenticate);
@@ -105,3 +109,90 @@ agentsRouter.get('/stats', async (req: Request, res: Response, next: NextFunctio
     next(err);
   }
 });
+
+// Ghost Negotiator: Approve or reject an AI-drafted counter-offer
+agentsRouter.post(
+  '/negotiate/approve',
+  authorize('admin', 'talent_manager'),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { agentRunId, approved, editedReply } = req.body;
+
+      if (!agentRunId || typeof approved !== 'boolean') {
+        res.status(400).json({ error: 'agentRunId and approved (boolean) required' });
+        return;
+      }
+
+      // Fetch the agent run
+      const runResult = await query(
+        `SELECT * FROM agent_runs WHERE id = $1 AND organization_id = $2 AND agent_type = 'negotiator'`,
+        [agentRunId, req.user!.organizationId]
+      );
+
+      if (runResult.rows.length === 0) {
+        res.status(404).json({ error: 'Negotiator run not found' });
+        return;
+      }
+
+      const run = runResult.rows[0];
+      const outputData = run.output_data || {};
+
+      if (approved) {
+        // Use the edited reply if provided, otherwise use the AI's suggested reply
+        const finalReply = editedReply || outputData.suggestedReply;
+
+        // In production, this would send the email via the organization's email integration
+        // For now, log to audit_events and publish an event
+        await query(
+          `INSERT INTO audit_events (id, organization_id, actor_type, actor_id, action, resource_type, resource_id, metadata)
+           VALUES ($1, $2, 'user', $3, 'approve', 'negotiator_reply', $4, $5)`,
+          [
+            uuidv4(),
+            req.user!.organizationId,
+            req.user!.userId,
+            agentRunId,
+            JSON.stringify({
+              approved: true,
+              originalReply: outputData.suggestedReply,
+              finalReply,
+              counterOfferAmount: outputData.counterOfferAmount,
+              approvedBy: req.user!.userId,
+            }),
+          ]
+        );
+
+        await publishEvent({
+          organizationId: req.user!.organizationId,
+          eventType: 'email.sent' as EventType,
+          source: 'ghost-negotiator',
+          payload: {
+            agentRunId,
+            reply: finalReply,
+            counterOfferAmount: outputData.counterOfferAmount,
+            approvedBy: req.user!.userId,
+          },
+          idempotencyKey: `negotiator-approve-${agentRunId}`,
+        });
+
+        res.json({ status: 'approved', reply: finalReply });
+      } else {
+        // Log rejection
+        await query(
+          `INSERT INTO audit_events (id, organization_id, actor_type, actor_id, action, resource_type, resource_id, metadata)
+           VALUES ($1, $2, 'user', $3, 'reject', 'negotiator_reply', $4, $5)`,
+          [
+            uuidv4(),
+            req.user!.organizationId,
+            req.user!.userId,
+            agentRunId,
+            JSON.stringify({ approved: false, rejectedBy: req.user!.userId }),
+          ]
+        );
+
+        res.json({ status: 'rejected' });
+      }
+    } catch (err) {
+      next(err);
+    }
+  }
+);

@@ -10,3 +10,7 @@ export * from './events';
 export * from './agents';
 export * from './ledger';
 export * from './integrations';
+export * from './scout';
+export * from './video';
+export * from './sentiment';
+export * from './branding';

@@ -953,6 +953,280 @@ const options: swaggerJsdoc.Options = {
           responses: { '200': { description: 'Creator deleted' }, '404': { description: 'Not found' } },
         },
       },
+
+      // ===== Module 1: Predictive Scouting Engine =====
+      '/api/scout/trending': {
+        get: {
+          tags: ['Scout Engine'],
+          summary: 'Get trending creators with velocity scores',
+          description: 'Returns up to 50 creators ranked by growth velocity and AI score.',
+          responses: { '200': { description: 'Trending creators list' } },
+        },
+      },
+      '/api/scout/alerts': {
+        get: {
+          tags: ['Scout Engine'],
+          summary: 'Get breakout alerts',
+          description: 'Returns recent breakout detection alerts from the scouting engine.',
+          responses: { '200': { description: 'Scout alerts list' } },
+        },
+      },
+      '/api/scout/ingest': {
+        post: {
+          tags: ['Scout Engine'],
+          summary: 'Ingest social metrics and calculate velocity score',
+          description: 'Called by scraper workers to feed real-time social metrics. Returns the calculated velocity score.',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['creatorPlatformId', 'platform', 'recentVideos', 'historicalAvgViews', 'historicalAvgEngagement', 'followersCount'],
+                  properties: {
+                    creatorPlatformId: { type: 'string', format: 'uuid' },
+                    platform: { type: 'string' },
+                    recentVideos: { type: 'array', items: { type: 'object' } },
+                    historicalAvgViews: { type: 'number' },
+                    historicalAvgEngagement: { type: 'number' },
+                    followersCount: { type: 'integer' },
+                  },
+                },
+              },
+            },
+          },
+          responses: { '200': { description: 'Velocity score calculated' } },
+        },
+      },
+      '/api/scout/batch': {
+        post: {
+          tags: ['Scout Engine'],
+          summary: 'Queue batch of creators for background scouting',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['creatorPlatformIds'],
+                  properties: {
+                    creatorPlatformIds: { type: 'array', items: { type: 'string', format: 'uuid' } },
+                  },
+                },
+              },
+            },
+          },
+          responses: { '200': { description: 'Batch queued' } },
+        },
+      },
+      '/api/scout/velocity/{creatorPlatformId}': {
+        get: {
+          tags: ['Scout Engine'],
+          summary: 'Get velocity score for a single creator',
+          parameters: [{ name: 'creatorPlatformId', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: { '200': { description: 'Velocity score' } },
+        },
+      },
+
+      // ===== Module 2: Ghost Negotiator =====
+      '/api/agents/negotiate/approve': {
+        post: {
+          tags: ['Ghost Negotiator'],
+          summary: 'Approve or reject an AI-drafted counter-offer',
+          description: 'Human-in-the-loop approval for negotiator agent draft emails.',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['agentRunId', 'approved'],
+                  properties: {
+                    agentRunId: { type: 'string', format: 'uuid' },
+                    approved: { type: 'boolean' },
+                    editedReply: { type: 'string', description: 'Optional edited reply text' },
+                  },
+                },
+              },
+            },
+          },
+          responses: { '200': { description: 'Approval processed' } },
+        },
+      },
+
+      // ===== Module 4: Agency Command Center - Branding =====
+      '/api/branding': {
+        get: {
+          tags: ['Agency Command Center'],
+          summary: 'Get current white-label branding configuration',
+          responses: { '200': { description: 'Branding config' } },
+        },
+        patch: {
+          tags: ['Agency Command Center'],
+          summary: 'Update white-label branding (admin only)',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    logoUrl: { type: 'string', format: 'uri' },
+                    primaryColor: { type: 'string', pattern: '^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$' },
+                    accentColor: { type: 'string', pattern: '^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$' },
+                    backgroundColor: { type: 'string', pattern: '^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$' },
+                    companyName: { type: 'string' },
+                    fontFamily: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+          responses: { '200': { description: 'Branding updated' } },
+        },
+      },
+      '/api/branding/theme.css': {
+        get: {
+          tags: ['Agency Command Center'],
+          summary: 'Get CSS variables for white-label theming',
+          responses: { '200': { description: 'CSS variables', content: { 'text/css': {} } } },
+        },
+      },
+
+      // ===== Module 5/6: NeuraForge Video Engine =====
+      '/api/video/jobs': {
+        post: {
+          tags: ['Video Engine'],
+          summary: 'Create a video processing job',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['jobType', 'sourceFileKey'],
+                  properties: {
+                    jobType: { type: 'string', enum: ['transcribe', 'caption_render', 'clip_extract', 'format_adapt'] },
+                    sourceFileKey: { type: 'string' },
+                    targetPlatforms: { type: 'array', items: { type: 'string', enum: ['tiktok', 'youtube_shorts', 'instagram_reels', 'linkedin', 'youtube'] } },
+                  },
+                },
+              },
+            },
+          },
+          responses: { '201': { description: 'Job created and queued' } },
+        },
+        get: {
+          tags: ['Video Engine'],
+          summary: 'List video processing jobs',
+          parameters: [
+            { name: 'status', in: 'query', schema: { type: 'string' } },
+            { name: 'jobType', in: 'query', schema: { type: 'string' } },
+            { name: 'page', in: 'query', schema: { type: 'integer', default: 1 } },
+            { name: 'limit', in: 'query', schema: { type: 'integer', default: 20 } },
+          ],
+          responses: { '200': { description: 'Video jobs list' } },
+        },
+      },
+      '/api/video/jobs/{id}': {
+        get: {
+          tags: ['Video Engine'],
+          summary: 'Get a single video job',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: { '200': { description: 'Video job details' }, '404': { description: 'Not found' } },
+        },
+      },
+      '/api/video/jobs/{id}/assets': {
+        get: {
+          tags: ['Video Engine'],
+          summary: 'Get content assets for a video job (multi-platform adaptations)',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: { '200': { description: 'Content assets list' } },
+        },
+      },
+      '/api/video/upload-url': {
+        post: {
+          tags: ['Video Engine'],
+          summary: 'Generate a presigned upload URL for direct-to-cloud video upload',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['fileName', 'contentType'],
+                  properties: {
+                    fileName: { type: 'string' },
+                    contentType: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+          responses: { '200': { description: 'Presigned URL generated' } },
+        },
+      },
+
+      // ===== Module 7: Crisis Shield - Sentiment Engine =====
+      '/api/sentiment/analyze': {
+        post: {
+          tags: ['Crisis Shield'],
+          summary: 'Analyze a batch of comments for sentiment and crisis detection',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['creatorPlatformId', 'platform', 'comments'],
+                  properties: {
+                    creatorPlatformId: { type: 'string', format: 'uuid' },
+                    platform: { type: 'string' },
+                    comments: { type: 'array', items: { type: 'object', properties: { sourceType: { type: 'string' }, sourceId: { type: 'string' }, text: { type: 'string' } } } },
+                  },
+                },
+              },
+            },
+          },
+          responses: { '200': { description: 'Sentiment window with crisis level' } },
+        },
+      },
+      '/api/sentiment/classify': {
+        post: {
+          tags: ['Crisis Shield'],
+          summary: 'Classify a single text for sentiment (synchronous)',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['text'],
+                  properties: {
+                    text: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+          responses: { '200': { description: 'Sentiment classification result' } },
+        },
+      },
+      '/api/sentiment/alerts': {
+        get: {
+          tags: ['Crisis Shield'],
+          summary: 'Get crisis alerts for the organization',
+          responses: { '200': { description: 'Crisis alerts list' } },
+        },
+      },
+      '/api/sentiment/webhook/comments': {
+        post: {
+          tags: ['Crisis Shield'],
+          summary: 'Webhook endpoint for incoming social comments (queued for analysis)',
+          security: [],
+          responses: { '200': { description: 'Comments queued for analysis' } },
+        },
+      },
     },
   },
   apis: [],

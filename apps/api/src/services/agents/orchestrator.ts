@@ -1,6 +1,8 @@
 import { registerEventHandler, publishEvent } from '../event-bus';
 import { runNegotiatorAgent } from './negotiator';
+import { processScoutPayload } from './scout';
 import { v4 as uuidv4 } from 'uuid';
+import { emitToOrganization } from '../websocket';
 import type {
   DomainEvent,
   NegotiatorAgentInput,
@@ -46,6 +48,20 @@ async function handleEmailReplied(event: DomainEvent): Promise<void> {
 
   try {
     const result = await runNegotiatorAgent(negotiatorInput, idempotencyKey);
+
+    // Push approval notification via WebSocket (Ghost Negotiator: human-in-the-loop)
+    emitToOrganization(orgId, 'negotiator:approval_needed', {
+      agentType: 'negotiator',
+      triggerEventId: event.id,
+      emailId: payload.emailId,
+      creatorId: payload.creatorId,
+      suggestedReply: result.suggestedReply,
+      counterOfferAmount: result.counterOfferAmount,
+      sentiment: result.sentiment,
+      shouldEscalateToHuman: result.shouldEscalateToHuman,
+      reasoning: result.reasoning,
+      timestamp: new Date().toISOString(),
+    });
 
     // Publish the agent completion event
     await publishEvent({
