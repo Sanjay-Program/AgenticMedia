@@ -35,7 +35,7 @@ auditRouter.get(
       );
 
       const countResult = await query(
-        `SELECT COUNT(*) FROM audit_events WHERE ${conditions.slice(0, -0).join(' AND ')}`,
+        `SELECT COUNT(*) FROM audit_events WHERE ${conditions.join(' AND ')}`,
         params.slice(0, conditions.length)
       );
 

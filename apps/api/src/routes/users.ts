@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { v4 as uuidv4 } from 'uuid';
+import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { query } from '@agenticmedia/database';
@@ -115,7 +116,7 @@ usersRouter.post(
       if (existing.rows.length > 0) throw new AppError(409, 'Email already registered');
 
       const id = uuidv4();
-      const tempPassword = uuidv4().substring(0, 16);
+      const tempPassword = crypto.randomBytes(16).toString('base64url');
       const passwordHash = await bcrypt.hash(tempPassword, 12);
 
       await query(

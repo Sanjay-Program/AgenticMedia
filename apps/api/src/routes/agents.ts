@@ -37,7 +37,7 @@ agentsRouter.get('/runs', async (req: Request, res: Response, next: NextFunction
     );
 
     const countResult = await query(
-      `SELECT COUNT(*) FROM agent_runs WHERE ${conditions.slice(0, -0).join(' AND ')}`,
+      `SELECT COUNT(*) FROM agent_runs WHERE ${conditions.join(' AND ')}`,
       params.slice(0, conditions.length)
     );
 
