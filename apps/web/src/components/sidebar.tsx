@@ -8,6 +8,8 @@ const navigation = [
   { name: 'Creators', href: '/creators', icon: '🎬' },
   { name: 'Campaigns', href: '/campaigns', icon: '📈' },
   { name: 'Finance', href: '/finance', icon: '💰' },
+  { name: 'Deal Room', href: '/deal/demo', icon: '🤝' },
+  { name: 'Integrations', href: '/integrations', icon: '🔗' },
   { name: 'API Docs', href: `${API_URL}/api-docs`, icon: '📋' },
 ];
 

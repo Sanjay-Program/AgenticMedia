@@ -374,7 +374,7 @@ const options: swaggerJsdoc.Options = {
           tags: ['Webhooks'],
           summary: 'Handle Stripe webhook events',
           security: [],
-          description: 'Processes Stripe events including payment_intent.succeeded, transfer.paid, and transfer.failed.',
+          description: 'Processes Stripe events including checkout.session.completed, account.updated, payment_intent.succeeded, transfer.paid, and transfer.failed. Split payments are automatically routed through the double-entry ledger.',
           requestBody: {
             required: true,
             content: {
@@ -391,6 +391,119 @@ const options: swaggerJsdoc.Options = {
           },
           responses: {
             '200': { description: 'Webhook processed' },
+          },
+        },
+      },
+      '/api/integrations': {
+        get: {
+          tags: ['Integrations'],
+          summary: 'List connected integrations for the current user',
+          responses: {
+            '200': {
+              description: 'List of integrations',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      integrations: {
+                        type: 'array',
+                        items: {
+                          type: 'object',
+                          properties: {
+                            id: { type: 'string', format: 'uuid' },
+                            provider: { type: 'string', enum: ['hubspot', 'gmail', 'google', 'slack'] },
+                            isActive: { type: 'boolean' },
+                            createdAt: { type: 'string', format: 'date-time' },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      '/api/integrations/connect/{provider}': {
+        get: {
+          tags: ['Integrations'],
+          summary: 'Initiate OAuth2 flow for a provider',
+          parameters: [
+            {
+              name: 'provider',
+              in: 'path',
+              required: true,
+              schema: { type: 'string', enum: ['hubspot', 'gmail'] },
+              description: 'OAuth2 provider name',
+            },
+          ],
+          responses: {
+            '200': {
+              description: 'OAuth2 authorization URL',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      authUrl: { type: 'string', format: 'uri' },
+                      provider: { type: 'string' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      '/api/integrations/callback/{provider}': {
+        post: {
+          tags: ['Integrations'],
+          summary: 'Handle OAuth2 callback and store encrypted tokens',
+          parameters: [
+            {
+              name: 'provider',
+              in: 'path',
+              required: true,
+              schema: { type: 'string', enum: ['hubspot', 'gmail'] },
+            },
+          ],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['code'],
+                  properties: {
+                    code: { type: 'string' },
+                    state: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+          responses: {
+            '200': { description: 'Integration connected successfully' },
+          },
+        },
+      },
+      '/api/integrations/disconnect/{provider}': {
+        delete: {
+          tags: ['Integrations'],
+          summary: 'Disconnect an integration',
+          parameters: [
+            {
+              name: 'provider',
+              in: 'path',
+              required: true,
+              schema: { type: 'string', enum: ['hubspot', 'gmail'] },
+            },
+          ],
+          responses: {
+            '200': { description: 'Integration disconnected' },
+            '404': { description: 'Integration not found' },
           },
         },
       },

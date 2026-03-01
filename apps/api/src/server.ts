@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import { createServer } from 'http';
 import swaggerUi from 'swagger-ui-express';
 import { config } from './config';
 import { authRouter } from './routes/auth';
@@ -9,11 +10,14 @@ import { outreachRouter } from './routes/outreach';
 import { discoveryRouter } from './routes/discovery';
 import { fintechRouter } from './routes/fintech';
 import { webhookRouter } from './routes/webhooks';
+import { integrationsRouter } from './routes/integrations';
 import { errorHandler } from './middleware/error-handler';
 import { swaggerSpec } from './docs/swagger';
 import { initializeOrchestrator } from './services/agents/orchestrator';
+import { initializeWebSocket } from './services/websocket';
 
 const app = express();
+const httpServer = createServer(app);
 
 // Security middleware
 app.use(helmet());
@@ -46,6 +50,7 @@ app.use('/api/outreach', outreachRouter);
 app.use('/api/discovery', discoveryRouter);
 app.use('/api/fintech', fintechRouter);
 app.use('/api/webhooks', webhookRouter);
+app.use('/api/integrations', integrationsRouter);
 
 // Global error handler
 app.use(errorHandler);
@@ -54,9 +59,13 @@ if (config.NODE_ENV !== 'test') {
   // Initialize the AI Agent Orchestrator
   initializeOrchestrator();
 
-  app.listen(config.PORT, () => {
+  // Initialize WebSocket server for real-time events
+  initializeWebSocket(httpServer);
+
+  httpServer.listen(config.PORT, () => {
     console.log(`AgenticMedia API running on port ${config.PORT}`);
     console.log(`API docs available at http://localhost:${config.PORT}/api-docs`);
+    console.log(`WebSocket server available at ws://localhost:${config.PORT}/ws`);
   });
 }
 

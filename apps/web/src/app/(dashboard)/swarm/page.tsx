@@ -1,11 +1,15 @@
 /**
  * AI Swarm monitoring page — Server Component.
  * Shows real-time status of Scout, Negotiator, and Legal agents.
+ * Uses LiveAgentFeed (Client Component) for WebSocket-powered real-time events.
  *
  * In production, this would fetch from:
  * - /api/agent-runs (agent_runs table)
  * - /api/events (event_log table)
  */
+
+import { LiveAgentFeed } from '@/components/live-agent-feed';
+
 export default function SwarmPage() {
   // In production: const runs = await apiFetch('/api/agent-runs?limit=20');
   const agents = [
@@ -143,25 +147,12 @@ export default function SwarmPage() {
         </div>
       </div>
 
-      {/* Event Stream */}
+      {/* Live Event Stream (WebSocket-powered) */}
       <div className="mt-10">
-        <h2 className="text-lg font-semibold text-white">Event Stream</h2>
-        <p className="mt-1 text-sm text-gray-400">Live events from the event bus</p>
-        <div className="mt-4 space-y-2">
-          {[
-            { type: 'email.replied', source: 'gmail-webhook', time: '1m ago' },
-            { type: 'agent.run.completed', source: 'orchestrator', time: '1m ago' },
-            { type: 'payment.succeeded', source: 'stripe-webhook', time: '3m ago' },
-            { type: 'social.metric.updated', source: 'meta-api', time: '5m ago' },
-            { type: 'agent.run.completed', source: 'orchestrator', time: '5m ago' },
-            { type: 'email.replied', source: 'gmail-webhook', time: '8m ago' },
-          ].map((event, i) => (
-            <div key={i} className="flex items-center gap-4 rounded-lg border border-[#1e1e2e] bg-[#111118] px-4 py-2.5">
-              <code className="rounded bg-[#1e1e2e] px-2 py-0.5 text-xs text-indigo-400">{event.type}</code>
-              <span className="text-xs text-gray-500">from {event.source}</span>
-              <span className="ml-auto text-xs text-gray-600">{event.time}</span>
-            </div>
-          ))}
+        <h2 className="text-lg font-semibold text-white">Live Event Stream</h2>
+        <p className="mt-1 text-sm text-gray-400">Real-time events from the event bus via WebSocket</p>
+        <div className="mt-4">
+          <LiveAgentFeed />
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { query } from '@agenticmedia/database';
+import { executeSplitPayment, handleAccountUpdated } from '../services/stripe-connect';
 
 export const webhookRouter = Router();
 
@@ -68,6 +69,61 @@ webhookRouter.post('/stripe', async (req: Request, res: Response, next: NextFunc
                   Buffer.isBuffer(rawBody) ? JSON.parse(rawBody.toString()) : rawBody;
 
     switch (event.type) {
+      case 'checkout.session.completed': {
+        const session = event.data.object;
+        // Find the contract linked to this checkout session
+        const contractResult = await query(
+          `SELECT sc.id, sc.total_amount, sc.platform_fee_percent, sc.agency_fee_percent,
+                  sc.creator_payout_percent, cam.organization_id, cam.creator_id
+           FROM smart_contracts sc
+           JOIN campaigns cam ON cam.id = sc.campaign_id
+           WHERE sc.stripe_checkout_session_id = $1 OR cam.id = $2`,
+          [session.id, session.metadata?.campaign_id || null]
+        );
+
+        if (contractResult.rows.length > 0) {
+          const contract = contractResult.rows[0];
+          try {
+            await executeSplitPayment({
+              organizationId: contract.organization_id,
+              contractId: contract.id,
+              totalAmount: parseFloat(contract.total_amount),
+              platformFeePercent: parseFloat(contract.platform_fee_percent),
+              agencyFeePercent: parseFloat(contract.agency_fee_percent),
+              creatorPayoutPercent: parseFloat(contract.creator_payout_percent),
+              creatorId: contract.creator_id,
+              stripePaymentIntentId: session.payment_intent,
+              idempotencyKey: `checkout-${session.id}`,
+            });
+          } catch (splitErr) {
+            // Log to audit_events — no silent failures involving money
+            await query(
+              `INSERT INTO audit_events (id, organization_id, actor_type, action, resource_type, resource_id, metadata)
+               VALUES ($1, $2, 'system', 'error', 'split_payment', $3, $4)`,
+              [uuidv4(), contract.organization_id, contract.id,
+               JSON.stringify({ error: splitErr instanceof Error ? splitErr.message : 'Unknown error', sessionId: session.id })]
+            );
+            throw splitErr;
+          }
+        }
+        break;
+      }
+      case 'account.updated': {
+        const account = event.data.object;
+        // Look up the org linked to this Stripe Connect account
+        const orgResult = await query(
+          `SELECT id FROM organizations WHERE stripe_connect_account_id = $1`,
+          [account.id]
+        );
+        if (orgResult.rows.length > 0) {
+          await handleAccountUpdated(account.id, orgResult.rows[0].id, {
+            chargesEnabled: account.charges_enabled,
+            payoutsEnabled: account.payouts_enabled,
+            detailsSubmitted: account.details_submitted,
+          });
+        }
+        break;
+      }
       case 'payment_intent.succeeded': {
         const paymentIntent = event.data.object;
         // Update payment status
