@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — AgenticMedia</title>
+  <meta name="description" content="Sign in to your AgenticMedia dashboard. Access AI agents, analytics, and deal management.">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-to-content">Skip to content</a>
+  <div class="nav-mobile-overlay" id="nav-mobile-overlay"></div>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">A</span>
+        <span class="logo-text">AgenticMedia</span>
+      </a>
+      <div class="nav-links">
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+        <a href="signup.html" class="btn btn-outline">Create Account</a>
+      </div>
+      <div class="theme-switcher">
+        <button class="theme-btn" aria-label="Switch theme">🌙</button>
+        <div class="theme-dropdown">
+          <button class="theme-option" data-theme="dark"><span class="theme-option-swatch" style="background:#0a0a0f"></span> 🌙 Dark</button>
+          <button class="theme-option" data-theme="light"><span class="theme-option-swatch" style="background:#f8f9fc"></span> ☀️ Light</button>
+          <button class="theme-option" data-theme="midnight"><span class="theme-option-swatch" style="background:#0c1222"></span> 🌊 Midnight</button>
+          <button class="theme-option" data-theme="sunset"><span class="theme-option-swatch" style="background:#1a1014"></span> 🌅 Sunset</button>
+        </div>
+      </div>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">☰</button>
+    </div>
+  </nav>
+
+  <!-- Sign In Section -->
+  <section class="auth-section" id="main-content">
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-logo">
+            <span class="logo-icon">A</span>
+          </div>
+          <h1>Welcome back</h1>
+          <p>Sign in to your AgenticMedia dashboard</p>
+        </div>
+
+        <form id="signin-form" class="auth-form" novalidate>
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" placeholder="sanjay@agenticmedia.com" required autocomplete="email">
+            <span class="form-error" id="email-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+              <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+              <button type="button" class="password-toggle" aria-label="Toggle password visibility">👁️</button>
+            </div>
+            <span class="form-error" id="password-error"></span>
+          </div>
+
+          <div class="form-row">
+            <label class="checkbox-label">
+              <input type="checkbox" name="remember" checked>
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="form-link">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">
+            Sign In →
+          </button>
+
+          <div class="auth-divider">
+            <span>or continue with</span>
+          </div>
+
+          <div class="social-auth">
+            <button type="button" class="btn btn-social" data-provider="google">
+              🔍 Google
+            </button>
+            <button type="button" class="btn btn-social" data-provider="github">
+              ⚡ GitHub
+            </button>
+          </div>
+        </form>
+
+        <div class="auth-footer">
+          <p>Don't have an account? <a href="signup.html">Create one free →</a></p>
+        </div>
+      </div>
+
+      <div class="auth-side">
+        <div class="auth-side-content">
+          <h2>Your AI Agents Are Waiting</h2>
+          <p>Access your autonomous creator economy dashboard with real-time analytics, deal negotiations, and payment automation.</p>
+          <div class="auth-features">
+            <div class="auth-feature">
+              <span>🤖</span>
+              <span>4 AI Agents working 24/7</span>
+            </div>
+            <div class="auth-feature">
+              <span>📊</span>
+              <span>Cross-platform analytics</span>
+            </div>
+            <div class="auth-feature">
+              <span>💰</span>
+              <span>Automated split payments</span>
+            </div>
+            <div class="auth-feature">
+              <span>🔒</span>
+              <span>SOC-2 enterprise security</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

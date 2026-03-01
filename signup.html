@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — AgenticMedia</title>
+  <meta name="description" content="Create your AgenticMedia account. Start deploying AI agents for the creator economy.">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-to-content">Skip to content</a>
+  <div class="nav-mobile-overlay" id="nav-mobile-overlay"></div>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">A</span>
+        <span class="logo-text">AgenticMedia</span>
+      </a>
+      <div class="nav-links">
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+        <a href="signin.html" class="btn btn-outline">Sign In</a>
+      </div>
+      <div class="theme-switcher">
+        <button class="theme-btn" aria-label="Switch theme">🌙</button>
+        <div class="theme-dropdown">
+          <button class="theme-option" data-theme="dark"><span class="theme-option-swatch" style="background:#0a0a0f"></span> 🌙 Dark</button>
+          <button class="theme-option" data-theme="light"><span class="theme-option-swatch" style="background:#f8f9fc"></span> ☀️ Light</button>
+          <button class="theme-option" data-theme="midnight"><span class="theme-option-swatch" style="background:#0c1222"></span> 🌊 Midnight</button>
+          <button class="theme-option" data-theme="sunset"><span class="theme-option-swatch" style="background:#1a1014"></span> 🌅 Sunset</button>
+        </div>
+      </div>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">☰</button>
+    </div>
+  </nav>
+
+  <!-- Sign Up Section -->
+  <section class="auth-section" id="main-content">
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-logo">
+            <span class="logo-icon">A</span>
+          </div>
+          <h1>Create your account</h1>
+          <p>Start automating the creator economy in minutes</p>
+        </div>
+
+        <form id="signup-form" class="auth-form" novalidate>
+          <div class="form-row-2col">
+            <div class="form-group">
+              <label for="first-name">First name</label>
+              <input type="text" id="first-name" name="firstName" placeholder="Sanjay" required autocomplete="given-name">
+              <span class="form-error" id="first-name-error"></span>
+            </div>
+            <div class="form-group">
+              <label for="last-name">Last name</label>
+              <input type="text" id="last-name" name="lastName" placeholder="Murugadoss" required autocomplete="family-name">
+              <span class="form-error" id="last-name-error"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="company">Company / Organization</label>
+            <input type="text" id="company" name="company" placeholder="AgenticMedia Inc." autocomplete="organization">
+          </div>
+
+          <div class="form-group">
+            <label for="signup-email">Work email</label>
+            <input type="email" id="signup-email" name="email" placeholder="sanjay@agenticmedia.com" required autocomplete="email">
+            <span class="form-error" id="signup-email-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone number</label>
+            <input type="tel" id="phone" name="phone" placeholder="+91 7305771789" autocomplete="tel">
+          </div>
+
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <div class="password-wrapper">
+              <input type="password" id="signup-password" name="password" placeholder="Min. 8 characters" required autocomplete="new-password" minlength="8">
+              <button type="button" class="password-toggle" aria-label="Toggle password visibility">👁️</button>
+            </div>
+            <span class="form-error" id="signup-password-error"></span>
+            <div class="password-strength" id="password-strength">
+              <div class="strength-bar"><div class="strength-fill"></div></div>
+              <span class="strength-text">Password strength</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="plan">Select plan</label>
+            <select id="plan" name="plan">
+              <option value="starter">Starter — Free</option>
+              <option value="professional" selected>Professional — $99/mo</option>
+              <option value="enterprise">Enterprise — Custom</option>
+            </select>
+          </div>
+
+          <label class="checkbox-label">
+            <input type="checkbox" name="terms" required>
+            <span>I agree to the <a href="#" class="form-link">Terms of Service</a> and <a href="#" class="form-link">Privacy Policy</a></span>
+          </label>
+          <span class="form-error" id="terms-error"></span>
+
+          <button type="submit" class="btn btn-primary btn-full">
+            Create Account →
+          </button>
+
+          <div class="auth-divider">
+            <span>or sign up with</span>
+          </div>
+
+          <div class="social-auth">
+            <button type="button" class="btn btn-social" data-provider="google">
+              🔍 Google
+            </button>
+            <button type="button" class="btn btn-social" data-provider="github">
+              ⚡ GitHub
+            </button>
+          </div>
+        </form>
+
+        <div class="auth-footer">
+          <p>Already have an account? <a href="signin.html">Sign in →</a></p>
+        </div>
+      </div>
+
+      <div class="auth-side">
+        <div class="auth-side-content">
+          <h2>Join 500+ Agencies</h2>
+          <p>Deploy autonomous AI agents to manage your creator economy operations from day one.</p>
+          <div class="auth-features">
+            <div class="auth-feature">
+              <span>✅</span>
+              <span>No credit card required for Starter</span>
+            </div>
+            <div class="auth-feature">
+              <span>🚀</span>
+              <span>Setup in under 5 minutes</span>
+            </div>
+            <div class="auth-feature">
+              <span>🤖</span>
+              <span>AI agents deploy immediately</span>
+            </div>
+            <div class="auth-feature">
+              <span>📞</span>
+              <span>24/7 enterprise support</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

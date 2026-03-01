@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us — AgenticMedia</title>
+  <meta name="description" content="Contact AgenticMedia for enterprise inquiries, partnerships, and support. Phone: +91 7305771789, Email: sanjaymurugadoss02@gmail.com">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-to-content">Skip to content</a>
+  <div class="nav-mobile-overlay" id="nav-mobile-overlay"></div>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">A</span>
+        <span class="logo-text">AgenticMedia</span>
+      </a>
+      <div class="nav-links">
+        <a href="pricing.html">Pricing</a>
+        <a href="index.html#features">Features</a>
+        <a href="signin.html" class="btn btn-outline">Sign In</a>
+        <a href="signup.html" class="btn btn-primary">Get Started</a>
+      </div>
+      <div class="theme-switcher">
+        <button class="theme-btn" aria-label="Switch theme">🌙</button>
+        <div class="theme-dropdown">
+          <button class="theme-option" data-theme="dark"><span class="theme-option-swatch" style="background:#0a0a0f"></span> 🌙 Dark</button>
+          <button class="theme-option" data-theme="light"><span class="theme-option-swatch" style="background:#f8f9fc"></span> ☀️ Light</button>
+          <button class="theme-option" data-theme="midnight"><span class="theme-option-swatch" style="background:#0c1222"></span> 🌊 Midnight</button>
+          <button class="theme-option" data-theme="sunset"><span class="theme-option-swatch" style="background:#1a1014"></span> 🌅 Sunset</button>
+        </div>
+      </div>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">☰</button>
+    </div>
+  </nav>
+
+  <!-- Contact Hero -->
+  <section class="hero contact-hero" id="main-content">
+    <div class="container hero-inner">
+      <div class="hero-badge">📞 Get in Touch</div>
+      <h1 class="hero-title">
+        Let's Build<br>
+        <span class="gradient-text">Something Great</span>
+      </h1>
+      <p class="hero-subtitle">
+        Have questions about AgenticMedia? Want a custom enterprise demo?<br>
+        We'd love to hear from you.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact Content -->
+  <section class="section">
+    <div class="container">
+      <div class="contact-grid">
+        <!-- Contact Form -->
+        <div class="contact-form-wrapper">
+          <h2>Send us a message</h2>
+          <p>Fill out the form and our team will get back to you within 24 hours.</p>
+
+          <form id="contact-form" class="auth-form" novalidate>
+            <div class="form-row-2col">
+              <div class="form-group">
+                <label for="contact-first-name">First name</label>
+                <input type="text" id="contact-first-name" name="firstName" placeholder="Your first name" required>
+                <span class="form-error" id="contact-first-name-error"></span>
+              </div>
+              <div class="form-group">
+                <label for="contact-last-name">Last name</label>
+                <input type="text" id="contact-last-name" name="lastName" placeholder="Your last name" required>
+                <span class="form-error" id="contact-last-name-error"></span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="contact-email">Email address</label>
+              <input type="email" id="contact-email" name="email" placeholder="you@company.com" required>
+              <span class="form-error" id="contact-email-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="contact-phone">Phone number</label>
+              <input type="tel" id="contact-phone" name="phone" placeholder="+91 XXXXXXXXXX">
+            </div>
+
+            <div class="form-group">
+              <label for="contact-company">Company</label>
+              <input type="text" id="contact-company" name="company" placeholder="Your company name">
+            </div>
+
+            <div class="form-group">
+              <label for="contact-subject">Subject</label>
+              <select id="contact-subject" name="subject" required>
+                <option value="">Select a topic</option>
+                <option value="enterprise">Enterprise plan inquiry</option>
+                <option value="demo">Request a demo</option>
+                <option value="partnership">Partnership opportunity</option>
+                <option value="support">Technical support</option>
+                <option value="billing">Billing question</option>
+                <option value="other">Other</option>
+              </select>
+              <span class="form-error" id="contact-subject-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="contact-message">Message</label>
+              <textarea id="contact-message" name="message" rows="5" placeholder="Tell us about your project, team size, and what you're looking to automate..." required></textarea>
+              <span class="form-error" id="contact-message-error"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full">
+              Send Message →
+            </button>
+          </form>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="contact-info">
+          <div class="contact-info-card">
+            <h3>Contact Information</h3>
+            <p>Reach out to us directly through any of these channels.</p>
+
+            <div class="contact-details">
+              <div class="contact-detail">
+                <span class="contact-detail-icon">📧</span>
+                <div>
+                  <h4>Email</h4>
+                  <a href="mailto:sanjaymurugadoss02@gmail.com">sanjaymurugadoss02@gmail.com</a>
+                </div>
+              </div>
+              <div class="contact-detail">
+                <span class="contact-detail-icon">📞</span>
+                <div>
+                  <h4>Phone</h4>
+                  <a href="tel:+917305771789">+91 7305771789</a>
+                </div>
+              </div>
+              <div class="contact-detail">
+                <span class="contact-detail-icon">🏢</span>
+                <div>
+                  <h4>Office</h4>
+                  <p>AgenticMedia Inc.<br>India</p>
+                </div>
+              </div>
+              <div class="contact-detail">
+                <span class="contact-detail-icon">⏰</span>
+                <div>
+                  <h4>Business Hours</h4>
+                  <p>Monday – Friday<br>9:00 AM – 6:00 PM IST</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-info-card">
+            <h3>Quick Links</h3>
+            <div class="quick-links">
+              <a href="pricing.html" class="quick-link">
+                <span>💎</span>
+                <div>
+                  <h4>View Pricing</h4>
+                  <p>Compare plans and features</p>
+                </div>
+              </a>
+              <a href="signup.html" class="quick-link">
+                <span>🚀</span>
+                <div>
+                  <h4>Start Free Trial</h4>
+                  <p>No credit card required</p>
+                </div>
+              </a>
+              <a href="https://github.com/Sanjay-Program/AgenticMedia" class="quick-link" target="_blank" rel="noopener">
+                <span>⭐</span>
+                <div>
+                  <h4>GitHub Repository</h4>
+                  <p>Browse source code</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <div class="logo">
+          <span class="logo-icon">A</span>
+          <span class="logo-text">AgenticMedia</span>
+        </div>
+        <p>The Autonomous Creator Economy Engine.<br>Building the Sovereign Enterprise OS.</p>
+        <div class="footer-contact-info">
+          <a href="mailto:sanjaymurugadoss02@gmail.com">📧 sanjaymurugadoss02@gmail.com</a>
+          <a href="tel:+917305771789">📞 +91 7305771789</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-column">
+          <h5>Platform</h5>
+          <a href="index.html#features">Features</a>
+          <a href="index.html#integrations">Integrations</a>
+          <a href="index.html#agents">AI Agents</a>
+          <a href="pricing.html">Pricing</a>
+        </div>
+        <div class="footer-column">
+          <h5>Company</h5>
+          <a href="contact.html">Contact Us</a>
+          <a href="index.html#architecture">Architecture</a>
+          <a href="#">Careers</a>
+          <a href="#">Blog</a>
+        </div>
+        <div class="footer-column">
+          <h5>Account</h5>
+          <a href="signin.html">Sign In</a>
+          <a href="signup.html">Create Account</a>
+          <a href="https://github.com/Sanjay-Program/AgenticMedia" target="_blank" rel="noopener">GitHub</a>
+          <a href="#">API Docs</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 AgenticMedia. Sovereign Enterprise OS. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
