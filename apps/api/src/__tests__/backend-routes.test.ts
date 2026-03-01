@@ -99,6 +99,23 @@ describe('Backend Route Modules', () => {
     expect(paths).toContain('/balance');
     expect(paths).toContain('/balance-check');
   });
+
+  test('webhook route includes contact form endpoint', () => {
+    const { webhookRouter } = require('../routes/webhooks');
+    expect(webhookRouter).toBeDefined();
+    const routes = webhookRouter.stack
+      .filter((layer: any) => layer.route)
+      .map((layer: any) => ({
+        path: layer.route.path,
+        methods: Object.keys(layer.route.methods),
+      }));
+    // Contact form endpoint should exist as POST /contact
+    const contactRoute = routes.find((r: any) => r.path === '/contact' && r.methods.includes('post'));
+    expect(contactRoute).toBeTruthy();
+    // Existing webhook routes should still exist
+    expect(routes.find((r: any) => r.path === '/email-reply')).toBeTruthy();
+    expect(routes.find((r: any) => r.path === '/stripe')).toBeTruthy();
+  });
 });
 
 describe('Server Registration', () => {
