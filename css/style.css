@@ -1578,7 +1578,7 @@ textarea:focus-visible {
   border-radius: 12px;
   padding: 8px;
   z-index: 200;
-  box-shadow: 0 8px 32px var(--shadow-color);
+  box-shadow: 0 8px 32px var(--shadow-color), 0 0 0 1px var(--border);
 }
 
 .theme-dropdown.open {
