@@ -582,3 +582,68 @@ SELECT
     SUM(CASE WHEN entry_type = 'credit' THEN amount ELSE 0 END) AS balance
 FROM ledger_entries
 GROUP BY transaction_id;
+
+-- ============================================================
+-- Phase 5: Integration Hub & Social Media Connections
+-- ============================================================
+
+CREATE TYPE integration_provider AS ENUM (
+    'hubspot', 'gmail', 'youtube', 'instagram', 'tiktok', 'twitter', 'linkedin', 'slack', 'google'
+);
+CREATE TYPE integration_category AS ENUM ('social', 'crm', 'email', 'messaging');
+CREATE TYPE connection_status AS ENUM ('connected', 'disconnected', 'expired', 'error');
+
+CREATE TABLE integration_tokens (
+    id                  UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id     UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    user_id             UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    provider            integration_provider NOT NULL,
+    category            integration_category NOT NULL DEFAULT 'social',
+    encrypted_token_data TEXT NOT NULL,
+    platform_user_id    VARCHAR(255),
+    platform_username   VARCHAR(255),
+    display_name        VARCHAR(255),
+    profile_url         TEXT,
+    followers_count     BIGINT DEFAULT 0,
+    scopes              JSONB DEFAULT '[]',
+    status              connection_status NOT NULL DEFAULT 'connected',
+    last_synced_at      TIMESTAMPTZ,
+    is_active           BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (organization_id, user_id, provider)
+);
+
+CREATE INDEX idx_integration_tokens_org_id ON integration_tokens(organization_id);
+CREATE INDEX idx_integration_tokens_user_id ON integration_tokens(user_id);
+CREATE INDEX idx_integration_tokens_provider ON integration_tokens(provider);
+CREATE INDEX idx_integration_tokens_category ON integration_tokens(category);
+CREATE INDEX idx_integration_tokens_status ON integration_tokens(status);
+
+CREATE TRIGGER trg_integration_tokens_updated_at
+    BEFORE UPDATE ON integration_tokens
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Automation workflows table
+CREATE TABLE automation_workflows (
+    id                UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    organization_id   UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    name              VARCHAR(255) NOT NULL,
+    description       TEXT,
+    trigger_type      VARCHAR(255) NOT NULL,
+    trigger_config    JSONB NOT NULL DEFAULT '{}',
+    actions           JSONB NOT NULL DEFAULT '[]',
+    is_active         BOOLEAN NOT NULL DEFAULT TRUE,
+    last_run_at       TIMESTAMPTZ,
+    run_count         INTEGER NOT NULL DEFAULT 0,
+    created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_automation_workflows_org_id ON automation_workflows(organization_id);
+CREATE INDEX idx_automation_workflows_trigger ON automation_workflows(trigger_type);
+CREATE INDEX idx_automation_workflows_active ON automation_workflows(is_active);
+
+CREATE TRIGGER trg_automation_workflows_updated_at
+    BEFORE UPDATE ON automation_workflows
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

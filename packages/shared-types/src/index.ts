@@ -9,3 +9,4 @@ export * from './audit';
 export * from './events';
 export * from './agents';
 export * from './ledger';
+export * from './integrations';

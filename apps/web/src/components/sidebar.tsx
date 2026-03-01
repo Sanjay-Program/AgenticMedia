@@ -9,7 +9,9 @@ const navigation = [
   { name: 'Campaigns', href: '/campaigns', icon: '📈' },
   { name: 'Finance', href: '/finance', icon: '💰' },
   { name: 'Deal Room', href: '/deal/demo', icon: '🤝' },
+  { name: 'Social Media', href: '/social', icon: '📱' },
   { name: 'Integrations', href: '/integrations', icon: '🔗' },
+  { name: 'Automations', href: '/automations', icon: '⚡' },
   { name: 'API Docs', href: `${API_URL}/api-docs`, icon: '📋' },
 ];
 

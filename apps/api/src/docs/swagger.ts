@@ -412,9 +412,84 @@ const options: swaggerJsdoc.Options = {
                           type: 'object',
                           properties: {
                             id: { type: 'string', format: 'uuid' },
-                            provider: { type: 'string', enum: ['hubspot', 'gmail', 'google', 'slack'] },
+                            provider: { type: 'string', enum: ['hubspot', 'gmail', 'youtube', 'instagram', 'tiktok', 'twitter', 'linkedin', 'slack', 'google'] },
+                            category: { type: 'string', enum: ['social', 'crm', 'email', 'messaging'] },
+                            platformUsername: { type: 'string' },
+                            displayName: { type: 'string' },
+                            followersCount: { type: 'number' },
+                            status: { type: 'string', enum: ['connected', 'disconnected', 'expired', 'error'] },
                             isActive: { type: 'boolean' },
                             createdAt: { type: 'string', format: 'date-time' },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      '/api/integrations/registry': {
+        get: {
+          tags: ['Integrations'],
+          summary: 'Get the full list of supported integrations and their metadata',
+          responses: {
+            '200': {
+              description: 'Integration registry',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      integrations: {
+                        type: 'array',
+                        items: {
+                          type: 'object',
+                          properties: {
+                            provider: { type: 'string' },
+                            category: { type: 'string' },
+                            name: { type: 'string' },
+                            description: { type: 'string' },
+                            icon: { type: 'string' },
+                            scopes: { type: 'array', items: { type: 'string' } },
+                            features: { type: 'array', items: { type: 'string' } },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      '/api/integrations/social': {
+        get: {
+          tags: ['Integrations'],
+          summary: 'List connected social media accounts with platform metrics',
+          responses: {
+            '200': {
+              description: 'Social media connections',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      connections: {
+                        type: 'array',
+                        items: {
+                          type: 'object',
+                          properties: {
+                            id: { type: 'string', format: 'uuid' },
+                            provider: { type: 'string', enum: ['youtube', 'instagram', 'tiktok', 'twitter', 'linkedin'] },
+                            platformUsername: { type: 'string' },
+                            displayName: { type: 'string' },
+                            followersCount: { type: 'number' },
+                            status: { type: 'string' },
+                            lastSyncedAt: { type: 'string', format: 'date-time' },
                           },
                         },
                       },
@@ -435,7 +510,7 @@ const options: swaggerJsdoc.Options = {
               name: 'provider',
               in: 'path',
               required: true,
-              schema: { type: 'string', enum: ['hubspot', 'gmail'] },
+              schema: { type: 'string', enum: ['hubspot', 'gmail', 'youtube', 'instagram', 'tiktok', 'twitter', 'linkedin', 'slack'] },
               description: 'OAuth2 provider name',
             },
           ],
@@ -466,7 +541,7 @@ const options: swaggerJsdoc.Options = {
               name: 'provider',
               in: 'path',
               required: true,
-              schema: { type: 'string', enum: ['hubspot', 'gmail'] },
+              schema: { type: 'string', enum: ['hubspot', 'gmail', 'youtube', 'instagram', 'tiktok', 'twitter', 'linkedin', 'slack'] },
             },
           ],
           requestBody: {
@@ -479,6 +554,11 @@ const options: swaggerJsdoc.Options = {
                   properties: {
                     code: { type: 'string' },
                     state: { type: 'string' },
+                    platformUserId: { type: 'string' },
+                    platformUsername: { type: 'string' },
+                    displayName: { type: 'string' },
+                    profileUrl: { type: 'string' },
+                    followersCount: { type: 'number' },
                   },
                 },
               },
@@ -498,7 +578,7 @@ const options: swaggerJsdoc.Options = {
               name: 'provider',
               in: 'path',
               required: true,
-              schema: { type: 'string', enum: ['hubspot', 'gmail'] },
+              schema: { type: 'string', enum: ['hubspot', 'gmail', 'youtube', 'instagram', 'tiktok', 'twitter', 'linkedin', 'slack'] },
             },
           ],
           responses: {
