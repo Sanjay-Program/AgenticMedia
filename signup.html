@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,8 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <!-- Navigation -->
+  <a href="#main-content" class="skip-to-content">Skip to content</a>
+  <div class="nav-mobile-overlay" id="nav-mobile-overlay"></div>
   <nav class="nav">
     <div class="container nav-inner">
       <a href="index.html" class="logo">
@@ -20,11 +21,21 @@
         <a href="contact.html">Contact</a>
         <a href="signin.html" class="btn btn-outline">Sign In</a>
       </div>
+      <div class="theme-switcher">
+        <button class="theme-btn" aria-label="Switch theme">🌙</button>
+        <div class="theme-dropdown">
+          <button class="theme-option" data-theme="dark"><span class="theme-option-swatch" style="background:#0a0a0f"></span> 🌙 Dark</button>
+          <button class="theme-option" data-theme="light"><span class="theme-option-swatch" style="background:#f8f9fc"></span> ☀️ Light</button>
+          <button class="theme-option" data-theme="midnight"><span class="theme-option-swatch" style="background:#0c1222"></span> 🌊 Midnight</button>
+          <button class="theme-option" data-theme="sunset"><span class="theme-option-swatch" style="background:#1a1014"></span> 🌅 Sunset</button>
+        </div>
+      </div>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">☰</button>
     </div>
   </nav>
 
   <!-- Sign Up Section -->
-  <section class="auth-section">
+  <section class="auth-section" id="main-content">
     <div class="auth-container">
       <div class="auth-card">
         <div class="auth-header">
