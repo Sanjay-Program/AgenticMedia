@@ -610,6 +610,349 @@ const options: swaggerJsdoc.Options = {
           },
         },
       },
+      '/api/dashboard/stats': {
+        get: {
+          tags: ['Dashboard'],
+          summary: 'Get dashboard KPI stats for the current organization',
+          responses: {
+            '200': { description: 'Dashboard stats including GMV, deals, creators, agent runs' },
+          },
+        },
+      },
+      '/api/dashboard/activity': {
+        get: {
+          tags: ['Dashboard'],
+          summary: 'Get recent activity feed for the organization',
+          parameters: [
+            { name: 'limit', in: 'query', schema: { type: 'number', default: 20 } },
+          ],
+          responses: {
+            '200': { description: 'Recent audit events' },
+          },
+        },
+      },
+      '/api/agents/runs': {
+        get: {
+          tags: ['AI Agents'],
+          summary: 'List agent runs with optional filtering',
+          parameters: [
+            { name: 'agentType', in: 'query', schema: { type: 'string', enum: ['scout', 'negotiator', 'legal', 'orchestrator'] } },
+            { name: 'status', in: 'query', schema: { type: 'string', enum: ['pending', 'running', 'completed', 'failed', 'cancelled'] } },
+            { name: 'page', in: 'query', schema: { type: 'number', default: 1 } },
+            { name: 'limit', in: 'query', schema: { type: 'number', default: 20 } },
+          ],
+          responses: {
+            '200': { description: 'Paginated list of agent runs' },
+          },
+        },
+      },
+      '/api/agents/runs/{id}': {
+        get: {
+          tags: ['AI Agents'],
+          summary: 'Get a single agent run by ID',
+          parameters: [
+            { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } },
+          ],
+          responses: {
+            '200': { description: 'Agent run details' },
+            '404': { description: 'Agent run not found' },
+          },
+        },
+      },
+      '/api/agents/stats': {
+        get: {
+          tags: ['AI Agents'],
+          summary: 'Get agent usage stats for the organization',
+          responses: {
+            '200': { description: 'Agent runs grouped by type, status, and total tokens used' },
+          },
+        },
+      },
+      '/api/automations': {
+        get: {
+          tags: ['Automations'],
+          summary: 'List automation workflows',
+          responses: { '200': { description: 'List of automation workflows' } },
+        },
+        post: {
+          tags: ['Automations'],
+          summary: 'Create a new automation workflow',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['name', 'triggerType'],
+                  properties: {
+                    name: { type: 'string' },
+                    description: { type: 'string' },
+                    triggerType: { type: 'string' },
+                    triggerConfig: { type: 'object' },
+                    actions: { type: 'array', items: { type: 'object' } },
+                    isActive: { type: 'boolean', default: true },
+                  },
+                },
+              },
+            },
+          },
+          responses: { '201': { description: 'Automation created' } },
+        },
+      },
+      '/api/automations/{id}': {
+        get: {
+          tags: ['Automations'],
+          summary: 'Get a single automation workflow',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: { '200': { description: 'Automation details' }, '404': { description: 'Not found' } },
+        },
+        patch: {
+          tags: ['Automations'],
+          summary: 'Update an automation workflow',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: { '200': { description: 'Automation updated' }, '404': { description: 'Not found' } },
+        },
+        delete: {
+          tags: ['Automations'],
+          summary: 'Delete an automation workflow',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: { '200': { description: 'Automation deleted' }, '404': { description: 'Not found' } },
+        },
+      },
+      '/api/automations/{id}/toggle': {
+        post: {
+          tags: ['Automations'],
+          summary: 'Toggle automation active/inactive',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: { '200': { description: 'Automation toggled' } },
+        },
+      },
+      '/api/users/team': {
+        get: {
+          tags: ['Users'],
+          summary: 'List team members in the organization',
+          responses: { '200': { description: 'List of team members' } },
+        },
+      },
+      '/api/users/profile': {
+        patch: {
+          tags: ['Users'],
+          summary: 'Update the current user profile',
+          requestBody: {
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    fullName: { type: 'string' },
+                    email: { type: 'string', format: 'email' },
+                  },
+                },
+              },
+            },
+          },
+          responses: { '200': { description: 'Profile updated' } },
+        },
+      },
+      '/api/users/change-password': {
+        post: {
+          tags: ['Users'],
+          summary: 'Change the current user password',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['currentPassword', 'newPassword'],
+                  properties: {
+                    currentPassword: { type: 'string' },
+                    newPassword: { type: 'string', minLength: 8 },
+                  },
+                },
+              },
+            },
+          },
+          responses: { '200': { description: 'Password changed' }, '401': { description: 'Wrong current password' } },
+        },
+      },
+      '/api/users/invite': {
+        post: {
+          tags: ['Users'],
+          summary: 'Invite a new team member (admin only)',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['email', 'fullName', 'role'],
+                  properties: {
+                    email: { type: 'string', format: 'email' },
+                    fullName: { type: 'string' },
+                    role: { type: 'string', enum: ['admin', 'talent_manager', 'data_analyst', 'client_readonly'] },
+                  },
+                },
+              },
+            },
+          },
+          responses: { '201': { description: 'User invited' }, '409': { description: 'Email already registered' } },
+        },
+      },
+      '/api/users/{id}/role': {
+        patch: {
+          tags: ['Users'],
+          summary: 'Update a team member role (admin only)',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: { '200': { description: 'Role updated' } },
+        },
+      },
+      '/api/users/{id}/deactivate': {
+        post: {
+          tags: ['Users'],
+          summary: 'Deactivate a team member (admin only)',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: { '200': { description: 'User deactivated' } },
+        },
+      },
+      '/api/users/{id}/reactivate': {
+        post: {
+          tags: ['Users'],
+          summary: 'Reactivate a team member (admin only)',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: { '200': { description: 'User reactivated' } },
+        },
+      },
+      '/api/organizations/current': {
+        get: {
+          tags: ['Organizations'],
+          summary: 'Get the current organization details',
+          responses: { '200': { description: 'Organization details with member count' } },
+        },
+        patch: {
+          tags: ['Organizations'],
+          summary: 'Update organization settings (admin only)',
+          requestBody: {
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    name: { type: 'string' },
+                    customDomain: { type: 'string' },
+                    brandingConfig: { type: 'object' },
+                  },
+                },
+              },
+            },
+          },
+          responses: { '200': { description: 'Organization updated' } },
+        },
+      },
+      '/api/organizations/billing': {
+        get: {
+          tags: ['Organizations'],
+          summary: 'Get organization billing summary',
+          responses: { '200': { description: 'Billing summary with plan tier, ledger accounts, and revenue splits' } },
+        },
+      },
+      '/api/audit/events': {
+        get: {
+          tags: ['Audit'],
+          summary: 'List audit events (admin/data_analyst only)',
+          parameters: [
+            { name: 'action', in: 'query', schema: { type: 'string' } },
+            { name: 'resourceType', in: 'query', schema: { type: 'string' } },
+            { name: 'actorType', in: 'query', schema: { type: 'string' } },
+            { name: 'page', in: 'query', schema: { type: 'number', default: 1 } },
+            { name: 'limit', in: 'query', schema: { type: 'number', default: 50 } },
+          ],
+          responses: { '200': { description: 'Paginated audit events' } },
+        },
+      },
+      '/api/audit/summary': {
+        get: {
+          tags: ['Audit'],
+          summary: 'Get audit summary stats (admin/data_analyst only)',
+          responses: { '200': { description: 'Audit stats by action, resource type, and actor type' } },
+        },
+      },
+      '/api/ledger/accounts': {
+        get: {
+          tags: ['Ledger'],
+          summary: 'List ledger accounts for the organization',
+          responses: { '200': { description: 'List of ledger accounts with balances' } },
+        },
+      },
+      '/api/ledger/accounts/initialize': {
+        post: {
+          tags: ['Ledger'],
+          summary: 'Initialize system ledger accounts (idempotent, admin only)',
+          responses: { '200': { description: 'System accounts initialized' } },
+        },
+      },
+      '/api/ledger/transactions': {
+        get: {
+          tags: ['Ledger'],
+          summary: 'List financial transactions with entries',
+          parameters: [
+            { name: 'status', in: 'query', schema: { type: 'string', enum: ['pending', 'posted', 'reversed', 'failed'] } },
+            { name: 'page', in: 'query', schema: { type: 'number', default: 1 } },
+            { name: 'limit', in: 'query', schema: { type: 'number', default: 20 } },
+          ],
+          responses: { '200': { description: 'Paginated list of transactions with entries' } },
+        },
+      },
+      '/api/ledger/balance': {
+        get: {
+          tags: ['Ledger'],
+          summary: 'Get balance summary grouped by account type',
+          responses: { '200': { description: 'Account balances by type' } },
+        },
+      },
+      '/api/ledger/balance-check': {
+        get: {
+          tags: ['Ledger'],
+          summary: 'Verify double-entry balance integrity (admin/data_analyst only)',
+          responses: { '200': { description: 'Balance check results with health status' } },
+        },
+      },
+      '/api/fintech/campaigns/{id}': {
+        get: {
+          tags: ['Fintech'],
+          summary: 'Get a single campaign with contract details',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: { '200': { description: 'Campaign details' }, '404': { description: 'Not found' } },
+        },
+        patch: {
+          tags: ['Fintech'],
+          summary: 'Update campaign status or details',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: { '200': { description: 'Campaign updated' }, '404': { description: 'Not found' } },
+        },
+      },
+      '/api/fintech/contracts/{id}/activate': {
+        post: {
+          tags: ['Fintech'],
+          summary: 'Activate a draft contract (admin only)',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: { '200': { description: 'Contract activated' }, '404': { description: 'Not found or not draft' } },
+        },
+      },
+      '/api/creators/{id}': {
+        patch: {
+          tags: ['Creators'],
+          summary: 'Update a creator',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: { '200': { description: 'Creator updated' }, '404': { description: 'Not found' } },
+        },
+        delete: {
+          tags: ['Creators'],
+          summary: 'Delete a creator',
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }],
+          responses: { '200': { description: 'Creator deleted' }, '404': { description: 'Not found' } },
+        },
+      },
     },
   },
   apis: [],

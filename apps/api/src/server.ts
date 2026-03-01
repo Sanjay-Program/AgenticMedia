@@ -11,6 +11,13 @@ import { discoveryRouter } from './routes/discovery';
 import { fintechRouter } from './routes/fintech';
 import { webhookRouter } from './routes/webhooks';
 import { integrationsRouter } from './routes/integrations';
+import { dashboardRouter } from './routes/dashboard';
+import { agentsRouter } from './routes/agents';
+import { automationsRouter } from './routes/automations';
+import { usersRouter } from './routes/users';
+import { organizationsRouter } from './routes/organizations';
+import { auditRouter } from './routes/audit';
+import { ledgerRouter } from './routes/ledger';
 import { errorHandler } from './middleware/error-handler';
 import { swaggerSpec } from './docs/swagger';
 import { initializeOrchestrator } from './services/agents/orchestrator';
@@ -51,6 +58,13 @@ app.use('/api/discovery', discoveryRouter);
 app.use('/api/fintech', fintechRouter);
 app.use('/api/webhooks', webhookRouter);
 app.use('/api/integrations', integrationsRouter);
+app.use('/api/dashboard', dashboardRouter);
+app.use('/api/agents', agentsRouter);
+app.use('/api/automations', automationsRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/organizations', organizationsRouter);
+app.use('/api/audit', auditRouter);
+app.use('/api/ledger', ledgerRouter);
 
 // Global error handler
 app.use(errorHandler);

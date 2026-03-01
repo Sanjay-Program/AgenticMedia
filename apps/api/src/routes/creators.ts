@@ -107,6 +107,63 @@ creatorsRouter.get('/:id', async (req: Request, res: Response, next: NextFunctio
   }
 });
 
+// Update creator
+creatorsRouter.patch(
+  '/:id',
+  authorize('admin', 'talent_manager'),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { fullName, email, bio, primaryPlatform } = req.body;
+      const updates: string[] = [];
+      const params: unknown[] = [];
+      let paramIndex = 1;
+
+      if (fullName) { updates.push(`full_name = $${paramIndex++}`); params.push(fullName); }
+      if (email) { updates.push(`email = $${paramIndex++}`); params.push(email); }
+      if (bio !== undefined) { updates.push(`bio = $${paramIndex++}`); params.push(bio); }
+      if (primaryPlatform) { updates.push(`primary_platform = $${paramIndex++}`); params.push(primaryPlatform); }
+
+      if (updates.length === 0) {
+        throw new AppError(400, 'No fields to update');
+      }
+
+      params.push(req.params.id, req.user!.organizationId);
+      const result = await query(
+        `UPDATE creators SET ${updates.join(', ')} WHERE id = $${paramIndex++} AND organization_id = $${paramIndex} RETURNING *`,
+        params
+      );
+
+      if (result.rows.length === 0) {
+        throw new AppError(404, 'Creator not found');
+      }
+
+      res.json({ creator: result.rows[0] });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// Delete creator
+creatorsRouter.delete(
+  '/:id',
+  authorize('admin'),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await query(
+        'DELETE FROM creators WHERE id = $1 AND organization_id = $2 RETURNING id',
+        [req.params.id, req.user!.organizationId]
+      );
+      if (result.rows.length === 0) {
+        throw new AppError(404, 'Creator not found');
+      }
+      res.json({ deleted: true });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 // Add platform to creator
 creatorsRouter.post(
   '/:id/platforms',

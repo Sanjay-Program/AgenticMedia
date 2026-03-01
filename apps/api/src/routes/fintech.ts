@@ -214,3 +214,93 @@ fintechRouter.get(
     }
   }
 );
+
+// Update campaign status
+fintechRouter.patch(
+  '/campaigns/:id',
+  authorize('admin', 'talent_manager'),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { status, name, description, totalValue } = req.body;
+      const updates: string[] = [];
+      const params: unknown[] = [];
+      let paramIndex = 1;
+
+      if (status) { updates.push(`status = $${paramIndex++}`); params.push(status); }
+      if (name) { updates.push(`name = $${paramIndex++}`); params.push(name); }
+      if (description !== undefined) { updates.push(`description = $${paramIndex++}`); params.push(description); }
+      if (totalValue !== undefined) { updates.push(`total_value = $${paramIndex++}`); params.push(totalValue); }
+
+      if (updates.length === 0) {
+        throw new AppError(400, 'No fields to update');
+      }
+
+      params.push(req.params.id, req.user!.organizationId);
+      const result = await query(
+        `UPDATE campaigns SET ${updates.join(', ')} WHERE id = $${paramIndex++} AND organization_id = $${paramIndex} RETURNING *`,
+        params
+      );
+
+      if (result.rows.length === 0) {
+        throw new AppError(404, 'Campaign not found');
+      }
+
+      res.json({ campaign: result.rows[0] });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// Get single campaign with contract
+fintechRouter.get(
+  '/campaigns/:id',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await query(
+        `SELECT cam.*, c.full_name as creator_name, bc.company_name as brand_name,
+                sc.id as contract_id, sc.status as contract_status, sc.terms,
+                sc.platform_fee_percent, sc.agency_fee_percent, sc.creator_payout_percent
+         FROM campaigns cam
+         JOIN creators c ON c.id = cam.creator_id
+         LEFT JOIN brand_contacts bc ON bc.id = cam.brand_contact_id
+         LEFT JOIN smart_contracts sc ON sc.campaign_id = cam.id
+         WHERE cam.id = $1 AND cam.organization_id = $2`,
+        [req.params.id, req.user!.organizationId]
+      );
+
+      if (result.rows.length === 0) {
+        throw new AppError(404, 'Campaign not found');
+      }
+
+      res.json({ campaign: result.rows[0] });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// Activate a contract
+fintechRouter.post(
+  '/contracts/:id/activate',
+  authorize('admin'),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await query(
+        `UPDATE smart_contracts SET status = 'active'
+         WHERE id = $1 AND status = 'draft'
+         AND campaign_id IN (SELECT id FROM campaigns WHERE organization_id = $2)
+         RETURNING *`,
+        [req.params.id, req.user!.organizationId]
+      );
+
+      if (result.rows.length === 0) {
+        throw new AppError(404, 'Contract not found or not in draft status');
+      }
+
+      res.json({ contract: result.rows[0] });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
