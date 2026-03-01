@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — AgenticMedia</title>
+  <meta name="description" content="AgenticMedia enterprise dashboard. Manage AI agents, deals, integrations, analytics, and payments.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="dashboard-body">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="dashboard.html" class="logo">
+        <span class="logo-icon">A</span>
+        <span class="logo-text">AgenticMedia</span>
+      </a>
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">
+        <span class="sidebar-label">Main</span>
+        <a href="#command-center" class="sidebar-link active" data-page="command-center">
+          <span class="sidebar-icon">🏠</span>
+          <span>Command Center</span>
+        </a>
+        <a href="#ai-agents" class="sidebar-link" data-page="ai-agents">
+          <span class="sidebar-icon">🤖</span>
+          <span>AI Agents</span>
+        </a>
+        <a href="#deals" class="sidebar-link" data-page="deals">
+          <span class="sidebar-icon">🤝</span>
+          <span>Deal Room</span>
+        </a>
+      </div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Connect</span>
+        <a href="#integrations" class="sidebar-link" data-page="integrations">
+          <span class="sidebar-icon">🔗</span>
+          <span>Integrations</span>
+        </a>
+        <a href="#social" class="sidebar-link" data-page="social">
+          <span class="sidebar-icon">📱</span>
+          <span>Social Media</span>
+        </a>
+        <a href="#automations" class="sidebar-link" data-page="automations">
+          <span class="sidebar-icon">⚡</span>
+          <span>Automations</span>
+        </a>
+      </div>
+      <div class="sidebar-section">
+        <span class="sidebar-label">Account</span>
+        <a href="#settings" class="sidebar-link" data-page="settings">
+          <span class="sidebar-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+        <a href="#billing" class="sidebar-link" data-page="billing">
+          <span class="sidebar-icon">💳</span>
+          <span>Billing</span>
+        </a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user" id="sidebar-user">
+        <div class="user-avatar" id="user-avatar">S</div>
+        <div class="user-info">
+          <span class="user-name" id="user-name">User</span>
+          <span class="user-plan" id="user-plan">Professional</span>
+        </div>
+      </div>
+      <button class="sidebar-logout" id="logout-btn">Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-main" id="dashboard-main">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">☰</button>
+        <h1 class="topbar-title" id="topbar-title">Command Center</h1>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-search">
+          <input type="text" placeholder="Search..." class="search-input">
+        </div>
+        <button class="topbar-btn" id="notifications-btn" aria-label="Notifications">🔔 <span class="badge">3</span></button>
+        <button class="topbar-btn" id="topbar-user-btn" aria-label="Account">
+          <span class="user-avatar-sm" id="topbar-avatar">S</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ======================== -->
+    <!-- PAGE: Command Center     -->
+    <!-- ======================== -->
+    <div class="page active" id="page-command-center">
+      <!-- KPI Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-card-label">Total GMV</span>
+            <span class="stat-card-icon">💰</span>
+          </div>
+          <div class="stat-card-value">$12,487,320</div>
+          <div class="stat-card-change positive">↑ 23.5% vs last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-card-label">Active Deals</span>
+            <span class="stat-card-icon">🤝</span>
+          </div>
+          <div class="stat-card-value">47</div>
+          <div class="stat-card-change positive">↑ 12 new this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-card-label">AI Agent Runs</span>
+            <span class="stat-card-icon">🤖</span>
+          </div>
+          <div class="stat-card-value">536</div>
+          <div class="stat-card-change positive">↑ 89 today</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <span class="stat-card-label">Pending Payouts</span>
+            <span class="stat-card-icon">💳</span>
+          </div>
+          <div class="stat-card-value">$34,210</div>
+          <div class="stat-card-change neutral">3 creators awaiting</div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid-2col">
+        <!-- Live Agent Feed -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <h3>🔴 Live Agent Feed</h3>
+            <span class="live-badge">LIVE</span>
+          </div>
+          <div class="agent-feed" id="agent-feed">
+            <div class="feed-item">
+              <span class="feed-icon agent-scout-icon">🔍</span>
+              <div class="feed-content">
+                <span class="feed-agent">Scout Agent</span>
+                <span class="feed-msg">Discovered @maya_creates (TikTok, 2.1M followers, 8.4% engagement)</span>
+                <span class="feed-time">2 min ago</span>
+              </div>
+            </div>
+            <div class="feed-item">
+              <span class="feed-icon agent-negotiator-icon">🤝</span>
+              <div class="feed-content">
+                <span class="feed-agent">Negotiator Agent</span>
+                <span class="feed-msg">Counter-offer sent to BrandX: $15,000 for 3 Instagram posts + 1 Reel</span>
+                <span class="feed-time">8 min ago</span>
+              </div>
+            </div>
+            <div class="feed-item">
+              <span class="feed-icon agent-legal-icon">📋</span>
+              <div class="feed-content">
+                <span class="feed-agent">Legal Agent</span>
+                <span class="feed-msg">Contract #AM-2847 generated for deal with NovaBrand — sent to DocuSign</span>
+                <span class="feed-time">14 min ago</span>
+              </div>
+            </div>
+            <div class="feed-item">
+              <span class="feed-icon agent-orchestrator-icon">🎯</span>
+              <div class="feed-content">
+                <span class="feed-agent">Orchestrator</span>
+                <span class="feed-msg">Event: email.replied — routed to Negotiator for @techfluencer deal</span>
+                <span class="feed-time">21 min ago</span>
+              </div>
+            </div>
+            <div class="feed-item">
+              <span class="feed-icon agent-scout-icon">🔍</span>
+              <div class="feed-content">
+                <span class="feed-agent">Scout Agent</span>
+                <span class="feed-msg">Added @fitness_guru to CRM pipeline (Instagram, 890K, brand-fit: 92%)</span>
+                <span class="feed-time">35 min ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Deals -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <h3>📊 Recent Deals</h3>
+            <a href="#deals" class="dash-link" data-page="deals">View All →</a>
+          </div>
+          <div class="mini-table">
+            <div class="mini-table-row">
+              <div>
+                <span class="deal-brand">BrandX × @maya_creates</span>
+                <span class="deal-amount">$15,000</span>
+              </div>
+              <span class="status-badge status-negotiating">Negotiating</span>
+            </div>
+            <div class="mini-table-row">
+              <div>
+                <span class="deal-brand">NovaBrand × @techfluencer</span>
+                <span class="deal-amount">$28,500</span>
+              </div>
+              <span class="status-badge status-contract">Contract Sent</span>
+            </div>
+            <div class="mini-table-row">
+              <div>
+                <span class="deal-brand">FitCo × @fitness_guru</span>
+                <span class="deal-amount">$8,200</span>
+              </div>
+              <span class="status-badge status-completed">Completed</span>
+            </div>
+            <div class="mini-table-row">
+              <div>
+                <span class="deal-brand">TechStart × @dev_insider</span>
+                <span class="deal-amount">$12,000</span>
+              </div>
+              <span class="status-badge status-payment">Payment Pending</span>
+            </div>
+            <div class="mini-table-row">
+              <div>
+                <span class="deal-brand">EcoWear × @green_life</span>
+                <span class="deal-amount">$6,750</span>
+              </div>
+              <span class="status-badge status-negotiating">Negotiating</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Revenue Chart Placeholder -->
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <h3>📈 Revenue Overview</h3>
+          <div class="chart-controls">
+            <button class="chart-btn active">7D</button>
+            <button class="chart-btn">30D</button>
+            <button class="chart-btn">90D</button>
+            <button class="chart-btn">1Y</button>
+          </div>
+        </div>
+        <div class="chart-area" id="revenue-chart">
+          <div class="chart-bars">
+            <div class="chart-bar-group"><div class="chart-bar" style="height:45%"></div><span>Mon</span></div>
+            <div class="chart-bar-group"><div class="chart-bar" style="height:65%"></div><span>Tue</span></div>
+            <div class="chart-bar-group"><div class="chart-bar" style="height:55%"></div><span>Wed</span></div>
+            <div class="chart-bar-group"><div class="chart-bar" style="height:80%"></div><span>Thu</span></div>
+            <div class="chart-bar-group"><div class="chart-bar" style="height:70%"></div><span>Fri</span></div>
+            <div class="chart-bar-group"><div class="chart-bar" style="height:90%"></div><span>Sat</span></div>
+            <div class="chart-bar-group"><div class="chart-bar highlight" style="height:95%"></div><span>Sun</span></div>
+          </div>
+          <div class="chart-summary">
+            <div class="chart-total"><span>This Week</span><strong>$87,450</strong></div>
+            <div class="chart-total"><span>Platform Fee (2%)</span><strong>$1,749</strong></div>
+            <div class="chart-total"><span>Agency (15%)</span><strong>$13,118</strong></div>
+            <div class="chart-total"><span>Creator (83%)</span><strong>$72,584</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== -->
+    <!-- PAGE: AI Agents          -->
+    <!-- ======================== -->
+    <div class="page" id="page-ai-agents">
+      <div class="page-header">
+        <div>
+          <h2>AI Agent Swarm</h2>
+          <p>Monitor and manage your autonomous AI agents in real-time.</p>
+        </div>
+        <button class="btn btn-primary" id="deploy-agent-btn">Deploy New Agent →</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Total Runs Today</span><span class="stat-card-icon">🔄</span></div><div class="stat-card-value">536</div><div class="stat-card-change positive">↑ 18% vs yesterday</div></div>
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Success Rate</span><span class="stat-card-icon">✅</span></div><div class="stat-card-value">97.4%</div><div class="stat-card-change positive">↑ 0.3%</div></div>
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Token Usage</span><span class="stat-card-icon">🪙</span></div><div class="stat-card-value">142K</div><div class="stat-card-change neutral">GPT-4o Turbo</div></div>
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Avg Response</span><span class="stat-card-icon">⏱️</span></div><div class="stat-card-value">2.3s</div><div class="stat-card-change positive">↓ 0.4s faster</div></div>
+      </div>
+
+      <div class="agents-dashboard-grid">
+        <div class="agent-dash-card">
+          <div class="agent-dash-header">
+            <div class="agent-dash-info"><span class="agent-dash-icon">🔍</span><div><h4>Scout Agent</h4><span class="agent-dash-status running">● Running</span></div></div>
+            <button class="btn btn-outline btn-sm">Configure</button>
+          </div>
+          <p class="agent-dash-desc">Discovers creators across TikTok & Instagram, evaluates brand-fit scores, adds to CRM pipeline.</p>
+          <div class="agent-dash-stats">
+            <div><span>Runs Today</span><strong>89</strong></div>
+            <div><span>Success</span><strong>97.8%</strong></div>
+            <div><span>Creators Found</span><strong>34</strong></div>
+            <div><span>Tokens</span><strong>28.4K</strong></div>
+          </div>
+          <div class="agent-dash-log">
+            <div class="log-entry"><span class="log-time">2 min ago</span><span>Discovered @maya_creates (2.1M, 8.4% engagement)</span></div>
+            <div class="log-entry"><span class="log-time">18 min ago</span><span>Added @fitness_guru to pipeline (890K, score: 92%)</span></div>
+            <div class="log-entry"><span class="log-time">45 min ago</span><span>Scanned 847 profiles in #fitness niche</span></div>
+          </div>
+        </div>
+
+        <div class="agent-dash-card">
+          <div class="agent-dash-header">
+            <div class="agent-dash-info"><span class="agent-dash-icon">🤝</span><div><h4>Negotiator Agent</h4><span class="agent-dash-status running">● Running</span></div></div>
+            <button class="btn btn-outline btn-sm">Configure</button>
+          </div>
+          <p class="agent-dash-desc">Reads emails, generates counter-offers using CPM data, negotiates brand sponsorships autonomously.</p>
+          <div class="agent-dash-stats">
+            <div><span>Runs Today</span><strong>156</strong></div>
+            <div><span>Success</span><strong>94.2%</strong></div>
+            <div><span>Deals Closed</span><strong>12</strong></div>
+            <div><span>Tokens</span><strong>67.1K</strong></div>
+          </div>
+          <div class="agent-dash-log">
+            <div class="log-entry"><span class="log-time">8 min ago</span><span>Counter-offer sent to BrandX: $15,000 for 3 posts + 1 Reel</span></div>
+            <div class="log-entry"><span class="log-time">32 min ago</span><span>Deal closed with FitCo at $8,200 (initial offer: $5,500)</span></div>
+            <div class="log-entry"><span class="log-time">1h ago</span><span>Analyzed 23 competitor CPM rates for tech niche</span></div>
+          </div>
+        </div>
+
+        <div class="agent-dash-card">
+          <div class="agent-dash-header">
+            <div class="agent-dash-info"><span class="agent-dash-icon">📋</span><div><h4>Legal Agent</h4><span class="agent-dash-status running">● Running</span></div></div>
+            <button class="btn btn-outline btn-sm">Configure</button>
+          </div>
+          <p class="agent-dash-desc">Auto-generates contracts via DocuSign with templates for exclusivity, usage rights, milestones.</p>
+          <div class="agent-dash-stats">
+            <div><span>Runs Today</span><strong>23</strong></div>
+            <div><span>Success</span><strong>100%</strong></div>
+            <div><span>Contracts</span><strong>8</strong></div>
+            <div><span>Tokens</span><strong>19.2K</strong></div>
+          </div>
+          <div class="agent-dash-log">
+            <div class="log-entry"><span class="log-time">14 min ago</span><span>Contract #AM-2847 generated for NovaBrand deal</span></div>
+            <div class="log-entry"><span class="log-time">2h ago</span><span>Contract #AM-2846 signed by both parties ✅</span></div>
+            <div class="log-entry"><span class="log-time">4h ago</span><span>Template updated: added AI content usage clause</span></div>
+          </div>
+        </div>
+
+        <div class="agent-dash-card">
+          <div class="agent-dash-header">
+            <div class="agent-dash-info"><span class="agent-dash-icon">🎯</span><div><h4>Orchestrator</h4><span class="agent-dash-status running">● Running</span></div></div>
+            <button class="btn btn-outline btn-sm">Configure</button>
+          </div>
+          <p class="agent-dash-desc">Routes domain events to agents, manages swarm lifecycle, handles event-driven workflows.</p>
+          <div class="agent-dash-stats">
+            <div><span>Events Today</span><strong>268</strong></div>
+            <div><span>Uptime</span><strong>99.6%</strong></div>
+            <div><span>Routes</span><strong>3</strong></div>
+            <div><span>Tokens</span><strong>27.3K</strong></div>
+          </div>
+          <div class="agent-dash-log">
+            <div class="log-entry"><span class="log-time">21 min ago</span><span>email.replied → Negotiator (techfluencer deal)</span></div>
+            <div class="log-entry"><span class="log-time">1h ago</span><span>social.creator.discovered → Scout validation</span></div>
+            <div class="log-entry"><span class="log-time">3h ago</span><span>contract.signed → triggered payment flow</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== -->
+    <!-- PAGE: Deal Room          -->
+    <!-- ======================== -->
+    <div class="page" id="page-deals">
+      <div class="page-header">
+        <div>
+          <h2>Deal Room</h2>
+          <p>Manage negotiations, contracts, and payment milestones across all deals.</p>
+        </div>
+        <button class="btn btn-primary" id="create-deal-btn">+ New Deal</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Active Deals</span><span class="stat-card-icon">📋</span></div><div class="stat-card-value">47</div><div class="stat-card-change positive">↑ 12 new</div></div>
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Total Pipeline</span><span class="stat-card-icon">💰</span></div><div class="stat-card-value">$284,500</div><div class="stat-card-change positive">↑ 34%</div></div>
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Avg Deal Size</span><span class="stat-card-icon">📊</span></div><div class="stat-card-value">$6,053</div><div class="stat-card-change positive">↑ $450</div></div>
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Close Rate</span><span class="stat-card-icon">🎯</span></div><div class="stat-card-value">68.4%</div><div class="stat-card-change positive">↑ 3.2%</div></div>
+      </div>
+
+      <!-- Pipeline Board -->
+      <div class="pipeline-board">
+        <div class="pipeline-column">
+          <div class="pipeline-header"><span class="pipeline-dot discovery"></span>Discovery <span class="pipeline-count">8</span></div>
+          <div class="pipeline-card"><div class="pipeline-card-brand">EcoWear × @green_life</div><div class="pipeline-card-amount">$6,750</div><div class="pipeline-card-meta">Instagram • 3 posts</div></div>
+          <div class="pipeline-card"><div class="pipeline-card-brand">PetCare × @animal_love</div><div class="pipeline-card-amount">$4,200</div><div class="pipeline-card-meta">TikTok • 2 videos</div></div>
+          <div class="pipeline-card"><div class="pipeline-card-brand">HealthPlus × @wellness_daily</div><div class="pipeline-card-amount">$9,800</div><div class="pipeline-card-meta">YouTube • 1 integration</div></div>
+        </div>
+        <div class="pipeline-column">
+          <div class="pipeline-header"><span class="pipeline-dot negotiating"></span>Negotiating <span class="pipeline-count">12</span></div>
+          <div class="pipeline-card"><div class="pipeline-card-brand">BrandX × @maya_creates</div><div class="pipeline-card-amount">$15,000</div><div class="pipeline-card-meta">Instagram • 3 posts + 1 Reel</div></div>
+          <div class="pipeline-card"><div class="pipeline-card-brand">TechVault × @code_ninja</div><div class="pipeline-card-amount">$22,000</div><div class="pipeline-card-meta">YouTube • 2 videos</div></div>
+          <div class="pipeline-card"><div class="pipeline-card-brand">StyleDrop × @fashionista_k</div><div class="pipeline-card-amount">$11,500</div><div class="pipeline-card-meta">Instagram + TikTok bundle</div></div>
+        </div>
+        <div class="pipeline-column">
+          <div class="pipeline-header"><span class="pipeline-dot contract"></span>Contract <span class="pipeline-count">15</span></div>
+          <div class="pipeline-card"><div class="pipeline-card-brand">NovaBrand × @techfluencer</div><div class="pipeline-card-amount">$28,500</div><div class="pipeline-card-meta">Multi-platform • 6 month</div></div>
+          <div class="pipeline-card"><div class="pipeline-card-brand">GreenEarth × @eco_warrior</div><div class="pipeline-card-amount">$7,300</div><div class="pipeline-card-meta">Instagram • 4 posts</div></div>
+        </div>
+        <div class="pipeline-column">
+          <div class="pipeline-header"><span class="pipeline-dot completed"></span>Completed <span class="pipeline-count">12</span></div>
+          <div class="pipeline-card"><div class="pipeline-card-brand">FitCo × @fitness_guru</div><div class="pipeline-card-amount">$8,200</div><div class="pipeline-card-meta">Paid ✅</div></div>
+          <div class="pipeline-card"><div class="pipeline-card-brand">TechStart × @dev_insider</div><div class="pipeline-card-amount">$12,000</div><div class="pipeline-card-meta">Payment pending</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== -->
+    <!-- PAGE: Integrations       -->
+    <!-- ======================== -->
+    <div class="page" id="page-integrations">
+      <div class="page-header">
+        <div>
+          <h2>Integration Hub</h2>
+          <p>Connect social platforms, CRM, email, and messaging tools with OAuth2 encrypted storage.</p>
+        </div>
+      </div>
+
+      <div class="integrations-dashboard-grid">
+        <div class="integration-dash-card connected">
+          <div class="integration-dash-header">
+            <span class="integration-dash-icon">📺</span>
+            <div><h4>YouTube</h4><span class="integration-status connected">● Connected</span></div>
+          </div>
+          <p>Channel analytics, video performance, audience demographics, revenue tracking</p>
+          <div class="integration-dash-stats"><span>Subscribers: 245K</span><span>Videos: 312</span></div>
+          <div class="integration-dash-actions">
+            <button class="btn btn-outline btn-sm">Sync Now</button>
+            <button class="btn btn-outline btn-sm btn-danger">Disconnect</button>
+          </div>
+        </div>
+        <div class="integration-dash-card connected">
+          <div class="integration-dash-header">
+            <span class="integration-dash-icon">📸</span>
+            <div><h4>Instagram</h4><span class="integration-status connected">● Connected</span></div>
+          </div>
+          <p>Post analytics, story metrics, audience insights, hashtag tracking</p>
+          <div class="integration-dash-stats"><span>Followers: 1.2M</span><span>Posts: 847</span></div>
+          <div class="integration-dash-actions">
+            <button class="btn btn-outline btn-sm">Sync Now</button>
+            <button class="btn btn-outline btn-sm btn-danger">Disconnect</button>
+          </div>
+        </div>
+        <div class="integration-dash-card connected">
+          <div class="integration-dash-header">
+            <span class="integration-dash-icon">🎵</span>
+            <div><h4>TikTok</h4><span class="integration-status connected">● Connected</span></div>
+          </div>
+          <p>Video analytics, trend tracking, audience demographics, sound analytics</p>
+          <div class="integration-dash-stats"><span>Followers: 3.4M</span><span>Videos: 1,203</span></div>
+          <div class="integration-dash-actions">
+            <button class="btn btn-outline btn-sm">Sync Now</button>
+            <button class="btn btn-outline btn-sm btn-danger">Disconnect</button>
+          </div>
+        </div>
+        <div class="integration-dash-card">
+          <div class="integration-dash-header">
+            <span class="integration-dash-icon">🐦</span>
+            <div><h4>Twitter / X</h4><span class="integration-status disconnected">○ Not Connected</span></div>
+          </div>
+          <p>Tweet analytics, engagement metrics, follower growth, mention tracking</p>
+          <div class="integration-dash-actions">
+            <button class="btn btn-primary btn-sm">Connect →</button>
+          </div>
+        </div>
+        <div class="integration-dash-card">
+          <div class="integration-dash-header">
+            <span class="integration-dash-icon">💼</span>
+            <div><h4>LinkedIn</h4><span class="integration-status disconnected">○ Not Connected</span></div>
+          </div>
+          <p>Post analytics, profile views, company page metrics, B2B reach</p>
+          <div class="integration-dash-actions">
+            <button class="btn btn-primary btn-sm">Connect →</button>
+          </div>
+        </div>
+        <div class="integration-dash-card connected">
+          <div class="integration-dash-header">
+            <span class="integration-dash-icon">🧲</span>
+            <div><h4>HubSpot CRM</h4><span class="integration-status connected">● Connected</span></div>
+          </div>
+          <p>Contact sync, deal pipeline, company records, activity logging</p>
+          <div class="integration-dash-stats"><span>Contacts: 2,341</span><span>Deals: 47</span></div>
+          <div class="integration-dash-actions">
+            <button class="btn btn-outline btn-sm">Sync Now</button>
+            <button class="btn btn-outline btn-sm btn-danger">Disconnect</button>
+          </div>
+        </div>
+        <div class="integration-dash-card connected">
+          <div class="integration-dash-header">
+            <span class="integration-dash-icon">📧</span>
+            <div><h4>Gmail</h4><span class="integration-status connected">● Connected</span></div>
+          </div>
+          <p>AI email sending, reply tracking, thread management, template sync</p>
+          <div class="integration-dash-stats"><span>Threads: 1,847</span><span>Templates: 12</span></div>
+          <div class="integration-dash-actions">
+            <button class="btn btn-outline btn-sm">Sync Now</button>
+            <button class="btn btn-outline btn-sm btn-danger">Disconnect</button>
+          </div>
+        </div>
+        <div class="integration-dash-card connected">
+          <div class="integration-dash-header">
+            <span class="integration-dash-icon">💬</span>
+            <div><h4>Slack</h4><span class="integration-status connected">● Connected</span></div>
+          </div>
+          <p>Deal notifications, agent alerts, team updates, command integration</p>
+          <div class="integration-dash-stats"><span>Channels: 8</span><span>Alerts: Active</span></div>
+          <div class="integration-dash-actions">
+            <button class="btn btn-outline btn-sm">Sync Now</button>
+            <button class="btn btn-outline btn-sm btn-danger">Disconnect</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== -->
+    <!-- PAGE: Social Media       -->
+    <!-- ======================== -->
+    <div class="page" id="page-social">
+      <div class="page-header">
+        <div>
+          <h2>Social Media Analytics</h2>
+          <p>Cross-platform performance metrics, audience demographics, and content analytics.</p>
+        </div>
+        <button class="btn btn-primary">Export Report →</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Total Followers</span><span class="stat-card-icon">👥</span></div><div class="stat-card-value">4.84M</div><div class="stat-card-change positive">↑ 12.3K this week</div></div>
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Avg Engagement</span><span class="stat-card-icon">💬</span></div><div class="stat-card-value">6.8%</div><div class="stat-card-change positive">↑ 0.4%</div></div>
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Content Posts</span><span class="stat-card-icon">📝</span></div><div class="stat-card-value">2,362</div><div class="stat-card-change neutral">18 this week</div></div>
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Total Reach</span><span class="stat-card-icon">📡</span></div><div class="stat-card-value">28.4M</div><div class="stat-card-change positive">↑ 2.1M</div></div>
+      </div>
+
+      <div class="social-platforms-grid">
+        <div class="social-platform-card">
+          <div class="social-platform-header"><span>📺</span><h4>YouTube</h4></div>
+          <div class="social-platform-stats">
+            <div class="sps"><span>Subscribers</span><strong>245K</strong></div>
+            <div class="sps"><span>Total Views</span><strong>12.4M</strong></div>
+            <div class="sps"><span>Avg Views</span><strong>39.7K</strong></div>
+            <div class="sps"><span>Watch Time</span><strong>847K hrs</strong></div>
+          </div>
+          <div class="social-platform-growth">
+            <span class="positive">↑ 3.2K subs this month</span>
+          </div>
+        </div>
+        <div class="social-platform-card">
+          <div class="social-platform-header"><span>📸</span><h4>Instagram</h4></div>
+          <div class="social-platform-stats">
+            <div class="sps"><span>Followers</span><strong>1.2M</strong></div>
+            <div class="sps"><span>Engagement</span><strong>7.2%</strong></div>
+            <div class="sps"><span>Reach</span><strong>4.8M</strong></div>
+            <div class="sps"><span>Stories</span><strong>89% open</strong></div>
+          </div>
+          <div class="social-platform-growth">
+            <span class="positive">↑ 5.1K followers this month</span>
+          </div>
+        </div>
+        <div class="social-platform-card">
+          <div class="social-platform-header"><span>🎵</span><h4>TikTok</h4></div>
+          <div class="social-platform-stats">
+            <div class="sps"><span>Followers</span><strong>3.4M</strong></div>
+            <div class="sps"><span>Engagement</span><strong>8.4%</strong></div>
+            <div class="sps"><span>Total Views</span><strong>89.2M</strong></div>
+            <div class="sps"><span>Avg Views</span><strong>74.1K</strong></div>
+          </div>
+          <div class="social-platform-growth">
+            <span class="positive">↑ 4.0K followers this month</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== -->
+    <!-- PAGE: Automations        -->
+    <!-- ======================== -->
+    <div class="page" id="page-automations">
+      <div class="page-header">
+        <div>
+          <h2>Automation Workflows</h2>
+          <p>Build and manage event-driven automations connecting all your tools and AI agents.</p>
+        </div>
+        <button class="btn btn-primary" id="create-automation-btn">+ New Workflow</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Active Workflows</span><span class="stat-card-icon">⚡</span></div><div class="stat-card-value">8</div><div class="stat-card-change neutral">2 paused</div></div>
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Executions Today</span><span class="stat-card-icon">🔄</span></div><div class="stat-card-value">342</div><div class="stat-card-change positive">↑ 28%</div></div>
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Success Rate</span><span class="stat-card-icon">✅</span></div><div class="stat-card-value">99.1%</div><div class="stat-card-change positive">↑ 0.2%</div></div>
+        <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">Time Saved</span><span class="stat-card-icon">⏰</span></div><div class="stat-card-value">127h</div><div class="stat-card-change positive">This month</div></div>
+      </div>
+
+      <div class="automations-list">
+        <div class="automation-item active">
+          <div class="automation-info">
+            <div class="automation-icon">📧→🤖</div>
+            <div><h4>Email Reply → Negotiator</h4><p>When a brand replies to an outreach email, route to Negotiator agent for counter-offer generation.</p></div>
+          </div>
+          <div class="automation-meta"><span>89 runs today</span><span class="automation-status active">● Active</span></div>
+        </div>
+        <div class="automation-item active">
+          <div class="automation-info">
+            <div class="automation-icon">🔍→📋</div>
+            <div><h4>Creator Discovered → CRM Sync</h4><p>When Scout finds a new creator, auto-add to HubSpot CRM with engagement scores and niche tags.</p></div>
+          </div>
+          <div class="automation-meta"><span>34 runs today</span><span class="automation-status active">● Active</span></div>
+        </div>
+        <div class="automation-item active">
+          <div class="automation-info">
+            <div class="automation-icon">📋→💰</div>
+            <div><h4>Contract Signed → Payment</h4><p>When contract is signed on DocuSign, trigger Stripe Connect split payment automatically.</p></div>
+          </div>
+          <div class="automation-meta"><span>8 runs today</span><span class="automation-status active">● Active</span></div>
+        </div>
+        <div class="automation-item active">
+          <div class="automation-info">
+            <div class="automation-icon">📱→📊</div>
+            <div><h4>Social Analytics Sync</h4><p>Every 6 hours, pull latest follower counts, engagement rates, and content stats from all platforms.</p></div>
+          </div>
+          <div class="automation-meta"><span>4 runs today</span><span class="automation-status active">● Active</span></div>
+        </div>
+        <div class="automation-item active">
+          <div class="automation-info">
+            <div class="automation-icon">🤝→💬</div>
+            <div><h4>Deal Update → Slack Notify</h4><p>Send Slack notification when a deal status changes (new, negotiating, contract, completed).</p></div>
+          </div>
+          <div class="automation-meta"><span>47 runs today</span><span class="automation-status active">● Active</span></div>
+        </div>
+        <div class="automation-item active">
+          <div class="automation-info">
+            <div class="automation-icon">💰→📧</div>
+            <div><h4>Payment → Creator Notification</h4><p>Email creators when their split payment is processed via Stripe Connect.</p></div>
+          </div>
+          <div class="automation-meta"><span>12 runs today</span><span class="automation-status active">● Active</span></div>
+        </div>
+        <div class="automation-item paused">
+          <div class="automation-info">
+            <div class="automation-icon">📊→📋</div>
+            <div><h4>Weekly Performance Report</h4><p>Generate and email a weekly PDF report of cross-platform analytics and deal performance.</p></div>
+          </div>
+          <div class="automation-meta"><span>—</span><span class="automation-status paused">⏸ Paused</span></div>
+        </div>
+        <div class="automation-item paused">
+          <div class="automation-info">
+            <div class="automation-icon">🔍→📧</div>
+            <div><h4>Cold Outreach Sequence</h4><p>When Scout qualifies a creator, automatically send a personalized outreach email sequence.</p></div>
+          </div>
+          <div class="automation-meta"><span>—</span><span class="automation-status paused">⏸ Paused</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== -->
+    <!-- PAGE: Settings           -->
+    <!-- ======================== -->
+    <div class="page" id="page-settings">
+      <div class="page-header">
+        <div>
+          <h2>Settings</h2>
+          <p>Manage your profile, company details, security, and preferences.</p>
+        </div>
+      </div>
+
+      <div class="settings-tabs">
+        <button class="settings-tab active" data-settings-tab="profile">Profile</button>
+        <button class="settings-tab" data-settings-tab="company">Company</button>
+        <button class="settings-tab" data-settings-tab="security">Security</button>
+        <button class="settings-tab" data-settings-tab="notifications">Notifications</button>
+        <button class="settings-tab" data-settings-tab="api">API Keys</button>
+      </div>
+
+      <!-- Profile Tab -->
+      <div class="settings-panel active" id="settings-profile">
+        <div class="dash-card">
+          <h3>Personal Information</h3>
+          <form class="settings-form" id="profile-form">
+            <div class="form-row-2col">
+              <div class="form-group"><label for="settings-first-name">First Name</label><input type="text" id="settings-first-name" value="Sanjay"></div>
+              <div class="form-group"><label for="settings-last-name">Last Name</label><input type="text" id="settings-last-name" value="Murugadoss"></div>
+            </div>
+            <div class="form-group"><label for="settings-email">Email Address</label><input type="email" id="settings-email" value="sanjaymurugadoss02@gmail.com"></div>
+            <div class="form-group"><label for="settings-phone">Phone Number</label><input type="tel" id="settings-phone" value="+91 7305771789"></div>
+            <div class="form-group"><label for="settings-role">Role</label><select id="settings-role"><option selected>Founder & CEO</option><option>Admin</option><option>Manager</option><option>Member</option></select></div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Company Tab -->
+      <div class="settings-panel" id="settings-company">
+        <div class="dash-card">
+          <h3>Company Information</h3>
+          <form class="settings-form" id="company-form">
+            <div class="form-group"><label for="company-name">Company Name</label><input type="text" id="company-name" value="AgenticMedia Inc."></div>
+            <div class="form-group"><label for="company-website">Website</label><input type="url" id="company-website" value="https://sanjay-program.github.io/AgenticMedia/"></div>
+            <div class="form-row-2col">
+              <div class="form-group"><label for="company-industry">Industry</label><select id="company-industry"><option selected>Creator Economy / Media</option><option>Advertising</option><option>Technology</option><option>Entertainment</option></select></div>
+              <div class="form-group"><label for="company-size">Company Size</label><select id="company-size"><option>1-10</option><option selected>11-50</option><option>51-200</option><option>201-500</option><option>500+</option></select></div>
+            </div>
+            <div class="form-group"><label for="company-email">Company Email</label><input type="email" id="company-email" value="sanjaymurugadoss02@gmail.com"></div>
+            <div class="form-group"><label for="company-phone">Company Phone</label><input type="tel" id="company-phone" value="+91 7305771789"></div>
+            <div class="form-group"><label for="company-address">Address</label><textarea id="company-address" rows="2">AgenticMedia Inc., India</textarea></div>
+            <div class="form-group"><label for="company-tax-id">Tax ID / GST</label><input type="text" id="company-tax-id" placeholder="Enter your tax ID"></div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Security Tab -->
+      <div class="settings-panel" id="settings-security">
+        <div class="dash-card">
+          <h3>Password & Security</h3>
+          <form class="settings-form" id="security-form">
+            <div class="form-group"><label for="current-password">Current Password</label><input type="password" id="current-password" placeholder="Enter current password"></div>
+            <div class="form-group"><label for="new-password">New Password</label><input type="password" id="new-password" placeholder="Min 8 characters"></div>
+            <div class="form-group"><label for="confirm-password">Confirm New Password</label><input type="password" id="confirm-password" placeholder="Confirm new password"></div>
+            <button type="submit" class="btn btn-primary">Update Password</button>
+          </form>
+        </div>
+        <div class="dash-card" style="margin-top:20px">
+          <h3>Two-Factor Authentication</h3>
+          <p style="color:var(--text-secondary);font-size:14px;margin-bottom:16px">Add an extra layer of security to your account.</p>
+          <button class="btn btn-outline">Enable 2FA →</button>
+        </div>
+        <div class="dash-card" style="margin-top:20px">
+          <h3>Active Sessions</h3>
+          <div class="session-list">
+            <div class="session-item"><div><strong>Chrome — macOS</strong><br><span style="color:var(--text-muted);font-size:13px">Current session • India</span></div><span class="status-badge status-completed">Active</span></div>
+            <div class="session-item"><div><strong>Safari — iPhone</strong><br><span style="color:var(--text-muted);font-size:13px">2 hours ago • India</span></div><button class="btn btn-outline btn-sm btn-danger">Revoke</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications Tab -->
+      <div class="settings-panel" id="settings-notifications">
+        <div class="dash-card">
+          <h3>Notification Preferences</h3>
+          <div class="notification-settings">
+            <div class="notification-row"><div><strong>Deal Updates</strong><br><span style="color:var(--text-muted);font-size:13px">Get notified on deal stage changes</span></div><label class="toggle-input"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+            <div class="notification-row"><div><strong>Agent Alerts</strong><br><span style="color:var(--text-muted);font-size:13px">Agent errors, completions, and milestones</span></div><label class="toggle-input"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+            <div class="notification-row"><div><strong>Payment Notifications</strong><br><span style="color:var(--text-muted);font-size:13px">Payouts, invoices, and billing alerts</span></div><label class="toggle-input"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+            <div class="notification-row"><div><strong>Weekly Reports</strong><br><span style="color:var(--text-muted);font-size:13px">Weekly performance summary via email</span></div><label class="toggle-input"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+            <div class="notification-row"><div><strong>Marketing Emails</strong><br><span style="color:var(--text-muted);font-size:13px">Product updates, tips, and news</span></div><label class="toggle-input"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- API Keys Tab -->
+      <div class="settings-panel" id="settings-api">
+        <div class="dash-card">
+          <h3>API Keys</h3>
+          <p style="color:var(--text-secondary);font-size:14px;margin-bottom:16px">Manage your API keys for external integrations.</p>
+          <div class="api-key-row"><div><strong>Production Key</strong><br><code style="color:var(--accent-indigo-light)">am_live_sk_••••••••••••4x7f</code></div><button class="btn btn-outline btn-sm">Regenerate</button></div>
+          <div class="api-key-row" style="margin-top:12px"><div><strong>Test Key</strong><br><code style="color:var(--accent-indigo-light)">am_test_sk_••••••••••••9m2k</code></div><button class="btn btn-outline btn-sm">Regenerate</button></div>
+          <button class="btn btn-primary" style="margin-top:20px">+ Create New API Key</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== -->
+    <!-- PAGE: Billing            -->
+    <!-- ======================== -->
+    <div class="page" id="page-billing">
+      <div class="page-header">
+        <div>
+          <h2>Billing & Payments</h2>
+          <p>Manage your subscription, payment methods, and view invoices.</p>
+        </div>
+      </div>
+
+      <!-- Current Plan -->
+      <div class="dash-card billing-plan-card">
+        <div class="billing-plan-header">
+          <div>
+            <h3>Current Plan: <span style="color:var(--accent-indigo-light)">Professional</span></h3>
+            <p style="color:var(--text-secondary);font-size:14px">$99/month • Renews March 15, 2026</p>
+          </div>
+          <div class="billing-plan-actions">
+            <a href="pricing.html" class="btn btn-outline">Change Plan</a>
+            <button class="btn btn-primary">Manage Subscription</button>
+          </div>
+        </div>
+        <div class="billing-plan-features">
+          <span>✓ 5 Social platforms</span>
+          <span>✓ All 4 AI agents</span>
+          <span>✓ 5,000 agent runs/mo</span>
+          <span>✓ Deal Room access</span>
+          <span>✓ Stripe payments</span>
+          <span>✓ 8 automations</span>
+        </div>
+        <div class="billing-usage">
+          <h4>Current Usage</h4>
+          <div class="usage-bar-row"><span>Agent Runs</span><div class="usage-bar"><div class="usage-fill" style="width:68%"></div></div><span>3,400 / 5,000</span></div>
+          <div class="usage-bar-row"><span>Integrations</span><div class="usage-bar"><div class="usage-fill" style="width:100%"></div></div><span>5 / 5</span></div>
+          <div class="usage-bar-row"><span>Automations</span><div class="usage-bar"><div class="usage-fill" style="width:100%"></div></div><span>8 / 8</span></div>
+        </div>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="dash-card" style="margin-top:20px">
+        <h3>Payment Method</h3>
+        <div class="payment-method-card">
+          <div class="pm-info"><span class="pm-icon">💳</span><div><strong>Visa ending in 4242</strong><br><span style="color:var(--text-muted);font-size:13px">Expires 12/2027</span></div></div>
+          <button class="btn btn-outline btn-sm">Update</button>
+        </div>
+        <button class="btn btn-outline" style="margin-top:12px">+ Add Payment Method</button>
+      </div>
+
+      <!-- Stripe Split Settings -->
+      <div class="dash-card" style="margin-top:20px">
+        <h3>Revenue Split Configuration</h3>
+        <p style="color:var(--text-secondary);font-size:14px;margin-bottom:16px">Stripe Connect automated payment splits for all completed deals.</p>
+        <div class="split-config">
+          <div class="split-row"><span>Platform Fee</span><div class="split-bar"><div class="split-fill platform" style="width:2%"></div></div><strong>2%</strong></div>
+          <div class="split-row"><span>Agency Share</span><div class="split-bar"><div class="split-fill agency" style="width:15%"></div></div><strong>15%</strong></div>
+          <div class="split-row"><span>Creator Share</span><div class="split-bar"><div class="split-fill creator" style="width:83%"></div></div><strong>83%</strong></div>
+        </div>
+      </div>
+
+      <!-- Invoice History -->
+      <div class="dash-card" style="margin-top:20px">
+        <div class="dash-card-header">
+          <h3>Invoice History</h3>
+          <button class="btn btn-outline btn-sm">Download All</button>
+        </div>
+        <div class="invoice-table">
+          <div class="invoice-row header"><span>Date</span><span>Description</span><span>Amount</span><span>Status</span></div>
+          <div class="invoice-row"><span>Feb 15, 2026</span><span>Professional Plan — Monthly</span><span>$99.00</span><span class="status-badge status-completed">Paid</span></div>
+          <div class="invoice-row"><span>Jan 15, 2026</span><span>Professional Plan — Monthly</span><span>$99.00</span><span class="status-badge status-completed">Paid</span></div>
+          <div class="invoice-row"><span>Dec 15, 2025</span><span>Professional Plan — Monthly</span><span>$99.00</span><span class="status-badge status-completed">Paid</span></div>
+          <div class="invoice-row"><span>Nov 15, 2025</span><span>Professional Plan — Monthly</span><span>$99.00</span><span class="status-badge status-completed">Paid</span></div>
+          <div class="invoice-row"><span>Oct 15, 2025</span><span>Plan Upgrade: Starter → Professional</span><span>$99.00</span><span class="status-badge status-completed">Paid</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

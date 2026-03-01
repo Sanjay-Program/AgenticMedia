@@ -94,11 +94,13 @@ document.addEventListener('DOMContentLoaded', function () {
         var btn = this.querySelector('button[type="submit"]');
         btn.textContent = 'Signing in...';
         btn.disabled = true;
+        // Store user session
+        var userData = { email: email, firstName: email.split('@')[0], lastName: '', plan: 'professional' };
+        try { var existing = JSON.parse(localStorage.getItem('agenticmedia_user')); if (existing && existing.email === email) userData = existing; } catch (e) { /* ignore */ }
+        localStorage.setItem('agenticmedia_user', JSON.stringify(userData));
         setTimeout(function () {
-          showSuccessModal('Sign In Successful!', 'Welcome back to AgenticMedia. Redirecting to your dashboard...', function () {
-            window.location.href = 'index.html';
-          });
-        }, 1500);
+          window.location.href = 'dashboard.html';
+        }, 1000);
       }
     });
   }
@@ -139,11 +141,15 @@ document.addEventListener('DOMContentLoaded', function () {
         var btn = this.querySelector('button[type="submit"]');
         btn.textContent = 'Creating account...';
         btn.disabled = true;
+        // Store user session and redirect to dashboard
+        var planVal = document.getElementById('plan').value;
+        var phone = document.getElementById('phone').value.trim();
+        var company = document.getElementById('company').value.trim();
+        var userData = { firstName: firstName, lastName: lastName, email: email, phone: phone, company: company, plan: planVal };
+        localStorage.setItem('agenticmedia_user', JSON.stringify(userData));
         setTimeout(function () {
-          showSuccessModal('Account Created!', 'Welcome to AgenticMedia, ' + firstName + '! Your AI agents are being deployed. Redirecting to sign in...', function () {
-            window.location.href = 'signin.html';
-          });
-        }, 2000);
+          window.location.href = 'dashboard.html';
+        }, 1200);
       }
     });
   }

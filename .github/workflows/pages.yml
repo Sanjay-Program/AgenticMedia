@@ -11,6 +11,7 @@ on:
       - 'signup.html'
       - 'pricing.html'
       - 'contact.html'
+      - 'dashboard.html'
       - 'css/**'
       - 'js/**'
       - 'assets/**'
