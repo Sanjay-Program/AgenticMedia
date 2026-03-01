@@ -11,6 +11,9 @@ import type {
 /**
  * System prompt for the Negotiator Agent.
  * It produces strictly JSON-structured counter-offers.
+ * Note: The schema uses pseudo-type notation (e.g., "number | null") which GPT models
+ * reliably interpret. The response_format: json_object parameter enforces valid JSON output.
+ * Compatible with gpt-4o, gpt-4-turbo, and gpt-3.5-turbo-1106+.
  */
 const NEGOTIATOR_SYSTEM_PROMPT = `You are an expert talent-agency negotiator AI. You analyze inbound brand emails and produce structured counter-offers for creator sponsorship deals.
 

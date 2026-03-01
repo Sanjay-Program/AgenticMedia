@@ -1,12 +1,14 @@
 import Link from 'next/link';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
 const navigation = [
   { name: 'Overview', href: '/', icon: '📊' },
   { name: 'AI Swarm', href: '/swarm', icon: '🤖' },
   { name: 'Creators', href: '/creators', icon: '🎬' },
   { name: 'Campaigns', href: '/campaigns', icon: '📈' },
   { name: 'Finance', href: '/finance', icon: '💰' },
-  { name: 'API Docs', href: 'http://localhost:3001/api-docs', icon: '📋' },
+  { name: 'API Docs', href: `${API_URL}/api-docs`, icon: '📋' },
 ];
 
 export function Sidebar() {
