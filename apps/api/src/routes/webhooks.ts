@@ -5,6 +5,33 @@ import { executeSplitPayment, handleAccountUpdated } from '../services/stripe-co
 
 export const webhookRouter = Router();
 
+// Contact form submission (public — no auth required)
+webhookRouter.post('/contact', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { firstName, lastName, email, subject, message } = req.body;
+
+    if (!firstName || !email || !message) {
+      res.status(400).json({ error: 'firstName, email, and message are required' });
+      return;
+    }
+
+    // Store contact submission in audit_events for tracking
+    await query(
+      `INSERT INTO audit_events (id, organization_id, actor_type, actor_id, action, resource_type, resource_id, metadata)
+       VALUES ($1, '00000000-0000-0000-0000-000000000000', 'anonymous', $2, 'contact_form_submitted', 'contact', $1, $3)`,
+      [
+        uuidv4(),
+        email,
+        JSON.stringify({ firstName, lastName, email, subject, message, submittedAt: new Date().toISOString() })
+      ]
+    );
+
+    res.json({ received: true, message: 'Contact form submitted successfully' });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Email reply webhook (from email service provider)
 webhookRouter.post('/email-reply', async (req: Request, res: Response, next: NextFunction) => {
   try {

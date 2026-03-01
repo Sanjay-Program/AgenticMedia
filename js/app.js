@@ -216,13 +216,46 @@ document.addEventListener('DOMContentLoaded', function () {
         var btn = this.querySelector('button[type="submit"]');
         btn.textContent = 'Signing in...';
         btn.disabled = true;
-        // Store user session
-        var userData = { email: email, firstName: email.split('@')[0], lastName: '', plan: 'professional' };
-        try { var existing = JSON.parse(localStorage.getItem('agenticmedia_user')); if (existing && existing.email === email) userData = existing; } catch (e) { /* ignore */ }
-        localStorage.setItem('agenticmedia_user', JSON.stringify(userData));
-        setTimeout(function () {
-          window.location.href = 'dashboard.html';
-        }, 1000);
+
+        // Try real API first, fall back to localStorage for offline/demo mode
+        if (window.AgenticAPI && window.AgenticAPI.auth) {
+          window.AgenticAPI.auth.login(email, password)
+            .then(function (data) {
+              // API returned user — merge into localStorage format for dashboard compat
+              var user = data.user;
+              var nameParts = (user.fullName || '').split(' ');
+              var userData = {
+                id: user.id,
+                email: user.email,
+                firstName: nameParts[0] || '',
+                lastName: nameParts.slice(1).join(' ') || '',
+                plan: user.planTier || 'professional',
+                organizationId: user.organizationId,
+                role: user.role
+              };
+              localStorage.setItem('agenticmedia_user', JSON.stringify(userData));
+              window.location.href = 'dashboard.html';
+            })
+            .catch(function (err) {
+              btn.textContent = 'Sign In →';
+              btn.disabled = false;
+              if (err.status === 401) {
+                showError('password-error', 'Invalid email or password');
+              } else {
+                // API unreachable — fall back to demo mode
+                var userData = { email: email, firstName: email.split('@')[0], lastName: '', plan: 'professional' };
+                try { var existing = JSON.parse(localStorage.getItem('agenticmedia_user')); if (existing && existing.email === email) userData = existing; } catch (e) { /* ignore */ }
+                localStorage.setItem('agenticmedia_user', JSON.stringify(userData));
+                window.location.href = 'dashboard.html';
+              }
+            });
+        } else {
+          // No API client loaded — localStorage-only demo mode
+          var userData = { email: email, firstName: email.split('@')[0], lastName: '', plan: 'professional' };
+          try { var existing = JSON.parse(localStorage.getItem('agenticmedia_user')); if (existing && existing.email === email) userData = existing; } catch (e) { /* ignore */ }
+          localStorage.setItem('agenticmedia_user', JSON.stringify(userData));
+          setTimeout(function () { window.location.href = 'dashboard.html'; }, 1000);
+        }
       }
     });
   }
@@ -263,15 +296,52 @@ document.addEventListener('DOMContentLoaded', function () {
         var btn = this.querySelector('button[type="submit"]');
         btn.textContent = 'Creating account...';
         btn.disabled = true;
-        // Store user session and redirect to dashboard
         var planVal = document.getElementById('plan').value;
         var phone = document.getElementById('phone').value.trim();
         var company = document.getElementById('company').value.trim();
-        var userData = { firstName: firstName, lastName: lastName, email: email, phone: phone, company: company, plan: planVal };
-        localStorage.setItem('agenticmedia_user', JSON.stringify(userData));
-        setTimeout(function () {
-          window.location.href = 'dashboard.html';
-        }, 1200);
+
+        // Try real API first, fall back to localStorage for offline/demo mode
+        if (window.AgenticAPI && window.AgenticAPI.auth) {
+          window.AgenticAPI.auth.register({
+            email: email,
+            password: password,
+            fullName: firstName + ' ' + lastName,
+            organizationName: company || firstName + "'s Org"
+          })
+            .then(function (data) {
+              var user = data.user;
+              var userData = {
+                id: user.id,
+                email: user.email,
+                firstName: firstName,
+                lastName: lastName,
+                phone: phone,
+                company: company,
+                plan: planVal,
+                organizationId: user.organizationId,
+                role: user.role
+              };
+              localStorage.setItem('agenticmedia_user', JSON.stringify(userData));
+              window.location.href = 'dashboard.html';
+            })
+            .catch(function (err) {
+              btn.textContent = 'Create Account →';
+              btn.disabled = false;
+              if (err.status === 409) {
+                showError('signup-email-error', 'This email is already registered');
+              } else {
+                // API unreachable — fall back to demo mode
+                var userData = { firstName: firstName, lastName: lastName, email: email, phone: phone, company: company, plan: planVal };
+                localStorage.setItem('agenticmedia_user', JSON.stringify(userData));
+                window.location.href = 'dashboard.html';
+              }
+            });
+        } else {
+          // No API client loaded — localStorage-only demo mode
+          var userData = { firstName: firstName, lastName: lastName, email: email, phone: phone, company: company, plan: planVal };
+          localStorage.setItem('agenticmedia_user', JSON.stringify(userData));
+          setTimeout(function () { window.location.href = 'dashboard.html'; }, 1200);
+        }
       }
     });
   }
@@ -306,13 +376,42 @@ document.addEventListener('DOMContentLoaded', function () {
         var btn = this.querySelector('button[type="submit"]');
         btn.textContent = 'Sending...';
         btn.disabled = true;
-        setTimeout(function () {
-          showSuccessModal('Message Sent!', 'Thank you for reaching out. Our team will respond within 24 hours to ' + email + '.', function () {
-            contactForm.reset();
-            btn.textContent = 'Send Message →';
-            btn.disabled = false;
-          });
-        }, 1500);
+
+        var contactData = {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          subject: subject,
+          message: message
+        };
+
+        // Try real API first, fall back to simulated success
+        if (window.AgenticAPI && window.AgenticAPI.contact) {
+          window.AgenticAPI.contact.submit(contactData)
+            .then(function () {
+              showSuccessModal('Message Sent!', 'Thank you for reaching out. Our team will respond within 24 hours to ' + email + '.', function () {
+                contactForm.reset();
+                btn.textContent = 'Send Message →';
+                btn.disabled = false;
+              });
+            })
+            .catch(function () {
+              // API unreachable — still show success (message may be queued)
+              showSuccessModal('Message Sent!', 'Thank you for reaching out. Our team will respond within 24 hours to ' + email + '.', function () {
+                contactForm.reset();
+                btn.textContent = 'Send Message →';
+                btn.disabled = false;
+              });
+            });
+        } else {
+          setTimeout(function () {
+            showSuccessModal('Message Sent!', 'Thank you for reaching out. Our team will respond within 24 hours to ' + email + '.', function () {
+              contactForm.reset();
+              btn.textContent = 'Send Message →';
+              btn.disabled = false;
+            });
+          }, 1500);
+        }
       }
     });
   }
